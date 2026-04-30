@@ -2,9 +2,9 @@
 
 ## Product Bet
 
-Build **DodoSettle India**, a revenue-to-payouts operating system for Indian SaaS, AI, and creator businesses.
+Build **DodoSettle India**, a zero-dollar revenue-to-payouts operating system for Indian SaaS, AI, and creator businesses.
 
-**One-line pitch:** DodoSettle lets Indian SaaS founders collect global revenue through Dodo Payments, then route verified revenue into fast Solana stablecoin payouts for contractors, vendors, affiliates, and AI agents.
+**One-line pitch:** DodoSettle lets Indian SaaS founders collect global revenue through Dodo Payments, then route verified revenue into fast Solana devnet/simulated stablecoin payouts for contractors, vendors, affiliates, and AI agents without spending a dollar during the hackathon.
 
 This is stronger than a simple stablecoin checkout because it uses both sides of the track:
 
@@ -12,6 +12,20 @@ This is stronger than a simple stablecoin checkout because it uses both sides of
 - **Solana stablecoins** handle programmable settlement: batch payouts, splits, escrow, transparent settlement proofs, and near-instant cross-border movement.
 - **India-specific pain** is clear: Indian SaaS/AI teams can sell globally, but cross-border payouts to contributors, vendors, and remote teams are slow, expensive, and operationally messy.
 - **x402 bonus angle**: AI agents can pay for API/data access and receive revenue splits without manual billing workflows.
+- **Zero-dollar delivery**: the default demo uses Dodo demo/test mode, Solana devnet/simulation, browser state, GitHub, and Vercel free tier only.
+
+## Zero-Dollar Constraint
+
+The project must not require a single dollar to build, demo, deploy, or judge.
+
+- Default Dodo path is demo mode; free Dodo test credentials are optional.
+- Default Solana path is simulation with devnet-style proof links; devnet tokens are optional.
+- No mainnet transactions.
+- No paid RPC.
+- No hosted database bill.
+- No paid AI, analytics, email, storage, or auth services.
+- No committed secrets or private keys.
+- Vercel deployment must fit the free tier.
 
 ## User
 
@@ -70,6 +84,7 @@ Why this can win:
 - Contractor/vendor/affiliate directory.
 - Payout rule builder.
 - Solana payout batch preview.
+- x402-style HTTP 402 demo endpoint.
 - Devnet transfer execution or realistic transaction simulation.
 - Settlement proof page with links/signatures.
 - Submission README with screenshots, architecture, setup, and demo script.
@@ -180,8 +195,10 @@ Core tables/entities:
 ### Day 11-12: Submission Hardening
 
 - Vercel deploy.
+- Confirm deployment uses free tier only.
 - Verify mobile and desktop.
 - Test fresh clone setup.
+- Test empty `.env.local` zero-dollar mode.
 - Add `.env.example` completeness.
 - Run build and audit.
 - Finalize README and demo video.
@@ -219,4 +236,3 @@ If those are not ready, we continue with realistic demo data and swap real value
 - Dodo webhooks should be verified, and the official SDK provides webhook helpers: https://docs.dodopayments.com/ar/developer-resources/webhooks
 - Solana token transfers use token accounts and checked transfer instructions: https://solana.com/docs/tokens/basics/transfer-tokens
 - x402 is an open HTTP 402 payment standard for programmatic payments: https://docs.x402.org/
-

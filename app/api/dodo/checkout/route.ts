@@ -1,22 +1,15 @@
 import { NextResponse } from "next/server";
+import { createDodoCheckout } from "../../../../lib/dodo";
 
-export async function POST() {
-  const hasApiKey = Boolean(process.env.DODO_PAYMENTS_API_KEY);
+export async function POST(request: Request) {
+  const body = await request.json().catch(() => ({}));
+  const checkout = await createDodoCheckout(body);
 
-  if (!hasApiKey) {
-    return NextResponse.json({
-      mode: "demo",
-      checkoutUrl: "https://test.checkout.dodopayments.com/session/demo",
-      message: "Set DODO_PAYMENTS_API_KEY to create real Dodo checkouts.",
-    });
-  }
-
-  return NextResponse.json(
-    {
-      message:
-        "Dodo checkout integration placeholder. Wire this route to the official Dodo Payments TypeScript SDK/API.",
-    },
-    { status: 501 },
-  );
+  return NextResponse.json({
+    checkout,
+    message:
+      checkout.mode === "test"
+        ? "Dodo test checkout created with free test credentials."
+        : "Zero-dollar demo checkout created without requiring Dodo credentials.",
+  });
 }
-

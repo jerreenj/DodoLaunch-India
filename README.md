@@ -4,7 +4,7 @@ Open-source hackathon project for the **Payments Track | Superteam India x Dodo 
 
 ## Concept
 
-Solana Dodo India is a stablecoin settlement layer for Indian SaaS, AI, and creator businesses that already sell globally through Dodo Payments. The app helps merchants collect through Dodo, track revenue events, and prepare low-cost Solana stablecoin payouts for contractors, vendors, and remote teams.
+DodoSettle India is a zero-dollar stablecoin settlement layer for Indian SaaS, AI, and creator businesses that already sell globally through Dodo Payments. The app helps merchants collect through Dodo, track revenue events, and prepare low-cost Solana devnet stablecoin payouts for contractors, vendors, affiliates, and AI agents.
 
 The first prototype focuses on a simple workflow:
 
@@ -22,13 +22,14 @@ The first prototype focuses on a simple workflow:
 
 ## Planned MVP
 
-- Merchant dashboard for Dodo payment events
-- Checkout creation flow using Dodo Payments
-- Webhook endpoint for payment and subscription events
-- Contractor directory with wallet addresses and payout preferences
-- Solana stablecoin payout batch builder
-- Demo analytics comparing wire fees/time against Solana settlement
-- Vercel deployment with environment-based demo mode
+- Operator dashboard for Dodo payment events
+- Dodo checkout flow with free test mode or built-in demo mode
+- Webhook endpoint that normalizes payment events into a settlement ledger
+- Contractor/vendor/affiliate/agent directory with split rules
+- Solana devnet/simulate payout batch builder
+- Demo analytics comparing bank wire fees/time against Solana settlement
+- x402-style HTTP 402 demo for agent/API payments
+- Vercel free-tier deployment with no required secrets
 
 See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
 
@@ -37,8 +38,19 @@ See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
 - Next.js App Router
 - TypeScript
 - Dodo Payments API / SDK
-- Solana web3 tooling
-- Vercel hosting
+- Solana devnet / simulation
+- x402-style HTTP 402 demo route
+- Vercel free-tier hosting
+
+## Zero-Dollar Mode
+
+The app runs without spending any money:
+
+- No Dodo credentials are required for demo mode.
+- No mainnet SOL, USDC, or paid RPC is used.
+- No hosted database is required; demo state is stored in the browser.
+- Optional real test credentials live only in `.env.local`.
+- The default payout path is Solana simulation/devnet proof links.
 
 ## Local Development
 
@@ -57,9 +69,28 @@ Copy `.env.example` to `.env.local` when wiring real integrations.
 cp .env.example .env.local
 ```
 
+Leaving the values blank is valid and keeps the app in zero-dollar demo mode.
+
+## Demo Flow
+
+1. Click **Create Dodo Checkout**.
+2. Click **Replay Webhook** to create a settlement ledger entry.
+3. Click **Prepare Payout Batch** to generate Solana devnet-style payout proof.
+4. Click **Run x402 Demo** to show the HTTP 402 agent payment path.
+
+## Submission Checklist
+
+- GitHub repo is public.
+- Vercel deployment uses the free tier.
+- Demo runs with empty `.env.local`.
+- Build passes with `npm run build`.
+- No secrets, tokens, private keys, or paid API keys are committed.
+- Demo video shows Dodo checkout, webhook, ledger, payout batch, and x402 bonus.
+
 ## Resources
 
 - Dodo Payments docs: https://docs.dodopayments.com/
 - Dodo API reference: https://docs.dodopayments.com/api-reference/introduction
 - Solana docs: https://solana.com/docs
+- x402 docs: https://docs.x402.org/
 - Frontier Hackathon: https://www.colosseum.org/
