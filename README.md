@@ -30,9 +30,11 @@ The first prototype focuses on this workflow:
 ## Implemented Demo
 
 - Interactive launch dashboard for a paid AI product.
+- Founder workspace to configure product, buyer, launch note, and amount.
 - Dodo checkout route with free test mode or built-in demo mode.
 - Dodo sale webhook route that normalizes events into a revenue ledger.
 - Revenue split model for founder, affiliate, vendor, agent/runtime, and platform fee.
+- Browser-generated CSV export for revenue split reports.
 - Solana devnet/simulate settlement batch builder with proof links.
 - x402-style HTTP 402 demo for paid agent/API access.
 - Browser-local demo state with no hosted database.
@@ -84,6 +86,7 @@ Leaving the values blank is valid and keeps the app in free demo mode.
 2. Click **Replay Sale Webhook** to create a Dodo revenue event.
 3. Click **Build Revenue Split** to generate the Solana settlement batch.
 4. Click **Run x402 API Sale** to show paid API access for agentic buyers.
+5. Edit the product details in **Founder workspace** and export the split report CSV.
 
 ## Submission Checklist
 

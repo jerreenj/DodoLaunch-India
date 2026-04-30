@@ -1,4 +1,4 @@
-import type { DemoState, Recipient, SettlementEntry } from "./types";
+import type { DemoState, ProductConfig, Recipient, SettlementEntry } from "./types";
 
 export const merchant = {
   name: "Madras MicroApps",
@@ -7,6 +7,16 @@ export const merchant = {
   customer: "OrbitWorks Pte Ltd",
   amount: 1280,
   currency: "USDG" as const,
+};
+
+export const defaultProductConfig: ProductConfig = {
+  founderName: merchant.name,
+  productName: merchant.product,
+  customerName: merchant.customer,
+  amount: merchant.amount,
+  currency: merchant.currency,
+  productUrl: "https://madrasmicroapps.example/supportagent-pro",
+  launchNote: "AI support credit pack for global SaaS teams that need instant customer replies.",
 };
 
 export const recipients: Recipient[] = [

@@ -61,10 +61,12 @@ The demo should feel like launching a real paid product.
 ### Must Ship
 
 - Launch dashboard for one paid AI/SaaS product.
+- Founder workspace for product name, buyer, amount, launch URL, and pitch note.
 - Dodo checkout creation route with demo fallback.
 - Dodo sale webhook route.
 - Revenue ledger.
 - Split model with founder, affiliate, vendor, agent/runtime, and platform fee.
+- CSV export for revenue split report.
 - Solana settlement batch preview with proof links.
 - x402-style paid API endpoint demo.
 - README with free build path and revenue model.

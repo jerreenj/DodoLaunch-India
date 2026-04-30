@@ -18,6 +18,16 @@ export type DodoCheckout = {
   zeroDollar: true;
 };
 
+export type ProductConfig = {
+  founderName: string;
+  productName: string;
+  customerName: string;
+  amount: number;
+  currency: "USDG" | "USDC";
+  productUrl: string;
+  launchNote: string;
+};
+
 export type DodoPaymentEvent = {
   id: string;
   source: "dodo";

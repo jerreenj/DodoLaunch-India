@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { initialDemoState, merchant, recipients } from "../lib/demo-data";
+import { defaultProductConfig, initialDemoState, recipients } from "../lib/demo-data";
 import { formatMoney, totalSettlement } from "../lib/settlement";
 import type {
   DemoState,
   DodoCheckout,
   DodoPaymentEvent,
   PayoutBatch,
+  ProductConfig,
   SettlementEntry,
   X402Event,
 } from "../lib/types";
 
 const storageKey = "dodolaunch-demo-state";
+const productStorageKey = "dodolaunch-product-config";
 
 const timeline = [
   "Paid product launched",
@@ -25,6 +27,7 @@ const timeline = [
 export default function Home() {
   const [state, setState] = useState<DemoState>(initialDemoState);
   const [selectedSettlementId, setSelectedSettlementId] = useState(initialDemoState.settlementEntries[0].id);
+  const [productConfig, setProductConfig] = useState<ProductConfig>(defaultProductConfig);
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [message, setMessage] = useState("Free demo path is ready. No secrets or paid services required.");
   const [x402Preview, setX402Preview] = useState<string>("HTTP 402 preview is waiting.");
@@ -36,11 +39,19 @@ export default function Home() {
       setState(parsed);
       setSelectedSettlementId(parsed.settlementEntries[0]?.id ?? initialDemoState.settlementEntries[0].id);
     }
+    const savedProduct = window.localStorage.getItem(productStorageKey);
+    if (savedProduct) {
+      setProductConfig(JSON.parse(savedProduct) as ProductConfig);
+    }
   }, []);
 
   useEffect(() => {
     window.localStorage.setItem(storageKey, JSON.stringify(state));
   }, [state]);
+
+  useEffect(() => {
+    window.localStorage.setItem(productStorageKey, JSON.stringify(productConfig));
+  }, [productConfig]);
 
   const selectedSettlement =
     state.settlementEntries.find((entry) => entry.id === selectedSettlementId) ?? state.settlementEntries[0];
@@ -48,6 +59,18 @@ export default function Home() {
   const latestBatch = state.payoutBatches[0];
   const totalRevenue = useMemo(() => totalSettlement(state.settlementEntries), [state.settlementEntries]);
   const latestCheckout = state.checkouts[0];
+  const splitPreview = useMemo(
+    () =>
+      recipients.map((recipient) => ({
+        ...recipient,
+        amount: Number(((productConfig.amount * recipient.splitBps) / 10000).toFixed(2)),
+      })),
+    [productConfig.amount],
+  );
+
+  function updateProduct<K extends keyof ProductConfig>(key: K, value: ProductConfig[K]) {
+    setProductConfig((current) => ({ ...current, [key]: value }));
+  }
 
   async function runAction<T>(name: string, action: () => Promise<T>) {
     setBusyAction(name);
@@ -64,9 +87,9 @@ export default function Home() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          productName: merchant.product,
-          customer: merchant.customer,
-          amount: merchant.amount,
+          productName: productConfig.productName,
+          customer: productConfig.customerName,
+          amount: productConfig.amount,
         }),
       });
       const data = (await response.json()) as { checkout: DodoCheckout; message: string };
@@ -147,6 +170,44 @@ export default function Home() {
     setX402Preview("HTTP 402 preview is waiting.");
   }
 
+  function saveLaunchKit() {
+    setMessage(`${productConfig.productName} launch kit saved locally. Create a paid product when ready.`);
+  }
+
+  function exportSplitCsv() {
+    const rows = [
+      ["product", "recipient", "role", "region", "split_percent", "amount", "currency", "wallet"],
+      ...splitPreview.map((row) => [
+        productConfig.productName,
+        row.name,
+        row.role,
+        row.region,
+        String(row.splitBps / 100),
+        row.amount.toFixed(2),
+        productConfig.currency,
+        row.wallet,
+      ]),
+    ];
+    const csv = rows
+      .map((row) =>
+        row
+          .map((cell) => {
+            const value = String(cell);
+            return /[",\n]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
+          })
+          .join(","),
+      )
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${productConfig.productName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-split-report.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setMessage("Revenue split CSV exported from browser-local data.");
+  }
+
   return (
     <main>
       <section className="appHero">
@@ -163,6 +224,12 @@ export default function Home() {
               credit packs, and paid APIs through Dodo Payments, then split revenue
               to founders, affiliates, vendors, agents, and the platform.
             </p>
+            <div className="quickProof">
+              <span>Product setup</span>
+              <span>Dodo checkout</span>
+              <span>Revenue split CSV</span>
+              <span>Solana-ready batch</span>
+            </div>
             <div className="commandBar">
               <button onClick={createCheckout} disabled={busyAction !== null}>
                 {busyAction === "checkout" ? "Creating..." : "Create Paid Product"}
@@ -181,10 +248,10 @@ export default function Home() {
           </div>
           <aside className="launchCard">
             <p className="eyebrow">Revenue model</p>
-            <h2>{merchant.product}</h2>
+            <h2>{productConfig.productName}</h2>
             <div className="launchPrice">
               <span>Demo sale</span>
-              <strong>{formatMoney(merchant.amount, merchant.currency)}</strong>
+              <strong>{formatMoney(productConfig.amount, productConfig.currency)}</strong>
             </div>
             <div className="modelRows">
               <div>
@@ -229,6 +296,56 @@ export default function Home() {
       </section>
 
       <section className="workspace">
+        <div className="panel setupPanel">
+          <div className="panelHeader">
+            <div>
+              <p className="eyebrow">Founder workspace</p>
+              <h2>Configure a paid product</h2>
+            </div>
+            <button className="ghostButton" onClick={saveLaunchKit}>
+              Save
+            </button>
+          </div>
+          <div className="formGrid">
+            <label>
+              <span>Founder / company</span>
+              <input value={productConfig.founderName} onChange={(event) => updateProduct("founderName", event.target.value)} />
+            </label>
+            <label>
+              <span>Product name</span>
+              <input value={productConfig.productName} onChange={(event) => updateProduct("productName", event.target.value)} />
+            </label>
+            <label>
+              <span>Demo buyer</span>
+              <input value={productConfig.customerName} onChange={(event) => updateProduct("customerName", event.target.value)} />
+            </label>
+            <label>
+              <span>Sale amount</span>
+              <input
+                min="1"
+                type="number"
+                value={productConfig.amount}
+                onChange={(event) => updateProduct("amount", Number(event.target.value) || 1)}
+              />
+            </label>
+            <label className="wideField">
+              <span>Product URL</span>
+              <input value={productConfig.productUrl} onChange={(event) => updateProduct("productUrl", event.target.value)} />
+            </label>
+            <label className="wideField">
+              <span>Launch note</span>
+              <textarea value={productConfig.launchNote} onChange={(event) => updateProduct("launchNote", event.target.value)} />
+            </label>
+          </div>
+          <div className="launchSummary">
+            <div>
+              <span>Launch link</span>
+              <strong>{productConfig.productUrl}</strong>
+            </div>
+            <button onClick={exportSplitCsv}>Export Split CSV</button>
+          </div>
+        </div>
+
         <div className="panel flowPanel">
           <div className="panelHeader">
             <div>
@@ -285,7 +402,7 @@ export default function Home() {
             <strong>{recipients.reduce((sum, item) => sum + item.splitBps, 0) / 100}% routed</strong>
           </div>
           <div className="recipientRows">
-            {recipients.map((recipient) => (
+            {splitPreview.map((recipient) => (
               <div className="recipientRow" key={recipient.id}>
                 <div>
                   <strong>{recipient.name}</strong>
@@ -293,7 +410,7 @@ export default function Home() {
                     {recipient.role} - {recipient.region}
                   </span>
                 </div>
-                <em>{recipient.splitBps / 100}%</em>
+                <em>{formatMoney(recipient.amount, productConfig.currency)}</em>
               </div>
             ))}
           </div>

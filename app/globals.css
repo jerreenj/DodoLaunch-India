@@ -113,6 +113,23 @@ h1 {
   line-height: 1.6;
 }
 
+.quickProof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.quickProof span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: white;
+  padding: 7px 10px;
+  color: #344139;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
 .commandBar {
   display: flex;
   flex-wrap: wrap;
@@ -258,6 +275,10 @@ h1 {
   padding: 18px 40px 64px;
 }
 
+.setupPanel {
+  grid-column: 1 / -1;
+}
+
 .panel {
   padding: 22px;
 }
@@ -274,6 +295,72 @@ h1 {
   margin-bottom: 0;
   font-size: 1.85rem;
   line-height: 1.05;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.formGrid label {
+  display: grid;
+  gap: 7px;
+}
+
+.formGrid label span,
+.launchSummary span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.formGrid input,
+.formGrid textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  color: var(--ink);
+  padding: 11px 12px;
+  font: inherit;
+}
+
+.formGrid textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+
+.wideField {
+  grid-column: span 2;
+}
+
+.launchSummary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7fbf8;
+}
+
+.launchSummary strong {
+  display: block;
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+}
+
+.launchSummary button {
+  min-height: 42px;
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  background: var(--green);
+  color: white;
+  padding: 10px 14px;
+  font-weight: 800;
 }
 
 .ghostButton {
@@ -434,6 +521,10 @@ h1 {
   .proofGrid {
     grid-template-columns: 1fr 1fr;
   }
+
+  .formGrid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 640px) {
@@ -452,8 +543,17 @@ h1 {
   }
 
   .modelRows,
+  .formGrid,
   .timeline,
   .proofGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .wideField {
+    grid-column: auto;
+  }
+
+  .launchSummary {
     grid-template-columns: 1fr;
   }
 
