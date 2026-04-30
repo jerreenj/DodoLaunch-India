@@ -2,14 +2,14 @@
   "name": "solana-dodo-india",
   "version": "0.1.0",
   "private": false,
-  "description": "Stablecoin settlement dashboard for Indian SaaS and AI businesses using Dodo Payments and Solana.",
+  "description": "Zero-dollar Dodo Payments to Solana devnet payout dashboard for Indian SaaS and AI founders.",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "dodopayments": "^2.29.1",

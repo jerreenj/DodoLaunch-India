@@ -1,10 +1,12 @@
-# Solana Dodo India
+# DodoSettle India
 
 Open-source hackathon project for the **Payments Track | Superteam India x Dodo Payments** at Solana Frontier.
 
+**DodoSettle India turns Dodo Payments revenue into programmable Solana devnet payout batches for Indian SaaS and AI founders, with a zero-dollar demo mode that needs no paid services, no mainnet funds, and no secrets.**
+
 ## Concept
 
-DodoSettle India is a zero-dollar stablecoin settlement layer for Indian SaaS, AI, and creator businesses that already sell globally through Dodo Payments. The app helps merchants collect through Dodo, track revenue events, and prepare low-cost Solana devnet stablecoin payouts for contractors, vendors, affiliates, and AI agents.
+DodoSettle India is a zero-dollar stablecoin settlement layer for Indian SaaS, AI, and creator businesses that already sell globally through Dodo Payments. The app helps merchants collect through Dodo, track revenue events, and prepare low-cost Solana devnet/simulated stablecoin payouts for contractors, vendors, affiliates, and AI agents.
 
 The first prototype focuses on a simple workflow:
 
@@ -20,16 +22,17 @@ The first prototype focuses on a simple workflow:
 - **India focus:** built for Indian SaaS and AI founders who sell globally but still face slow, expensive, manual payout operations.
 - **Defined user:** founders and finance operators managing invoices, contractor payments, and treasury movement.
 
-## Planned MVP
+## Implemented Demo
 
-- Operator dashboard for Dodo payment events
-- Dodo checkout flow with free test mode or built-in demo mode
-- Webhook endpoint that normalizes payment events into a settlement ledger
-- Contractor/vendor/affiliate/agent directory with split rules
-- Solana devnet/simulate payout batch builder
-- Demo analytics comparing bank wire fees/time against Solana settlement
-- x402-style HTTP 402 demo for agent/API payments
-- Vercel free-tier deployment with no required secrets
+- Interactive operator dashboard for Dodo payment events.
+- Dodo checkout route with free test mode or built-in demo mode.
+- Webhook endpoint that normalizes payment events into a settlement ledger.
+- Contractor/vendor/affiliate/agent directory with split rules.
+- Solana devnet/simulate payout batch builder with proof links.
+- Demo analytics comparing bank wire fees/time against Solana settlement.
+- x402-style HTTP 402 demo for agent/API payments.
+- Browser-local demo state with no hosted database.
+- Vercel free-tier deployment path with no required secrets.
 
 See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
 
@@ -37,7 +40,7 @@ See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
 
 - Next.js App Router
 - TypeScript
-- Dodo Payments API / SDK
+- Dodo Payments TypeScript SDK
 - Solana devnet / simulation
 - x402-style HTTP 402 demo route
 - Vercel free-tier hosting
