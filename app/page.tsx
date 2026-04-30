@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { initialDemoState, merchant, recipients, zeroDollarStack } from "../lib/demo-data";
+import { initialDemoState, merchant, recipients } from "../lib/demo-data";
 import { formatMoney, totalSettlement } from "../lib/settlement";
 import type {
   DemoState,
@@ -179,14 +179,32 @@ export default function Home() {
             </div>
             <p className="statusLine">{message}</p>
           </div>
-          <aside className="zeroPanel">
-            <p className="eyebrow">Free build path</p>
-            {zeroDollarStack.map((item) => (
-              <div className="checkRow" key={item}>
-                <span>0</span>
-                <strong>{item}</strong>
+          <aside className="launchCard">
+            <p className="eyebrow">Revenue model</p>
+            <h2>{merchant.product}</h2>
+            <div className="launchPrice">
+              <span>Demo sale</span>
+              <strong>{formatMoney(merchant.amount, merchant.currency)}</strong>
+            </div>
+            <div className="modelRows">
+              <div>
+                <span>Founder</span>
+                <strong>70%</strong>
               </div>
-            ))}
+              <div>
+                <span>Growth + vendors</span>
+                <strong>20%</strong>
+              </div>
+              <div>
+                <span>Agent/runtime</span>
+                <strong>5%</strong>
+              </div>
+              <div>
+                <span>Platform fee</span>
+                <strong>5%</strong>
+              </div>
+            </div>
+            <p className="cardNote">Dodo gets merchant checkout volume. We get a platform-fee revenue path.</p>
           </aside>
         </div>
       </section>

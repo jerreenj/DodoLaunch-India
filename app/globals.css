@@ -1,16 +1,15 @@
 :root {
   color-scheme: light;
-  --ink: #141816;
-  --muted: #66706b;
-  --line: #dfe5e1;
-  --paper: #f5f7f2;
+  --ink: #121512;
+  --muted: #667168;
+  --line: #dde4df;
+  --paper: #f6f8f5;
   --panel: #ffffff;
-  --green: #128755;
-  --lime: #d9f46d;
-  --cyan: #9ce7ea;
-  --blue: #255be8;
-  --coral: #ff735c;
-  --amber: #f7c948;
+  --green: #0d7a4f;
+  --lime: #d8f16a;
+  --blue: #2857e8;
+  --coral: #f06f54;
+  --soft: #eef4ef;
 }
 
 * {
@@ -40,7 +39,7 @@ button {
 
 button:disabled {
   cursor: progress;
-  opacity: 0.72;
+  opacity: 0.65;
 }
 
 h1,
@@ -51,13 +50,17 @@ p {
 }
 
 .appHero {
-  min-height: 74vh;
-  padding: 28px clamp(18px, 4vw, 64px) 48px;
-  background:
-    linear-gradient(110deg, rgba(217, 244, 109, 0.9), rgba(156, 231, 234, 0.78)),
-    url("https://images.unsplash.com/photo-1556745757-8d76bdb6984b?auto=format&fit=crop&w=1800&q=80");
-  background-position: center;
-  background-size: cover;
+  padding: 24px 40px 34px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar,
+.heroLayout,
+.metricsBand,
+.workspace {
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
 .topbar {
@@ -65,33 +68,29 @@ p {
   justify-content: space-between;
   gap: 16px;
   align-items: center;
+  min-height: 48px;
+  margin-bottom: 28px;
   font-size: 0.95rem;
-  margin-bottom: clamp(46px, 8vw, 90px);
 }
 
-.topbar span,
-.lead,
-.statusLine,
-.metric span,
-.checkoutBox span,
-.checkoutBox p,
-.recipientRow span,
-.proofGrid span,
-.emptyState,
-.x402Panel p {
-  color: #33433b;
+.topbar strong {
+  font-size: 1.05rem;
+}
+
+.topbar span {
+  color: var(--muted);
 }
 
 .heroLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
-  gap: clamp(24px, 5vw, 70px);
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 28px;
+  align-items: stretch;
 }
 
 .eyebrow {
-  margin: 0 0 12px;
-  color: #264138;
+  margin: 0 0 10px;
+  color: var(--green);
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0;
@@ -99,33 +98,36 @@ p {
 }
 
 h1 {
-  max-width: 920px;
-  margin-bottom: 22px;
-  font-size: clamp(3rem, 7vw, 7rem);
-  line-height: 0.95;
+  max-width: 760px;
+  margin-bottom: 18px;
+  font-size: 3.35rem;
+  line-height: 1;
   letter-spacing: 0;
 }
 
 .lead {
-  max-width: 720px;
-  font-size: 1.08rem;
-  line-height: 1.62;
+  max-width: 650px;
+  margin-bottom: 0;
+  color: #344139;
+  font-size: 1.06rem;
+  line-height: 1.6;
 }
 
 .commandBar {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 28px 0 16px;
+  margin: 24px 0 14px;
 }
 
 .commandBar button,
 .ghostButton {
-  min-height: 44px;
-  border: 1px solid var(--ink);
-  background: var(--ink);
+  min-height: 42px;
+  border: 1px solid #1b211d;
+  border-radius: 8px;
+  background: #1b211d;
   color: white;
-  padding: 11px 14px;
+  padding: 10px 14px;
   font-weight: 800;
 }
 
@@ -146,49 +148,91 @@ h1 {
 
 .statusLine {
   margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
   font-weight: 700;
 }
 
-.zeroPanel,
+.launchCard,
 .panel,
 .metric {
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  background: var(--panel);
 }
 
-.zeroPanel {
-  padding: 20px;
-  box-shadow: 0 18px 54px rgba(20, 24, 22, 0.2);
+.launchCard {
+  padding: 22px;
+  box-shadow: 0 18px 48px rgba(18, 21, 18, 0.08);
 }
 
-.checkRow {
+.launchCard h2 {
+  margin-bottom: 18px;
+  font-size: 1.55rem;
+  line-height: 1.12;
+}
+
+.launchPrice {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.launchPrice span,
+.modelRows span,
+.metric span,
+.checkoutBox span,
+.proofGrid span,
+.recipientRow span,
+.emptyState,
+.x402Panel p,
+.cardNote {
+  color: var(--muted);
+}
+
+.launchPrice strong {
+  font-size: 1.55rem;
+}
+
+.modelRows {
   display: grid;
-  grid-template-columns: 34px 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
-  align-items: center;
-  min-height: 42px;
-  border-top: 1px solid rgba(20, 24, 22, 0.12);
+  margin: 16px 0;
 }
 
-.checkRow span {
-  display: inline-grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  background: var(--lime);
-  border: 1px solid var(--ink);
-  font-weight: 900;
+.modelRows div {
+  min-height: 76px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.modelRows strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.35rem;
+}
+
+.cardNote {
+  margin-bottom: 0;
+  line-height: 1.5;
 }
 
 .metricsBand {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
-  padding: 18px clamp(18px, 4vw, 64px);
+  padding: 20px 40px 0;
 }
 
 .metric {
-  min-height: 108px;
+  min-height: 100px;
   padding: 18px;
 }
 
@@ -203,19 +247,19 @@ h1 {
 .metric strong {
   display: block;
   margin-top: 10px;
-  font-size: clamp(1.5rem, 3vw, 2.45rem);
+  font-size: 2rem;
   line-height: 1;
 }
 
 .workspace {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 18px;
-  padding: 16px clamp(18px, 4vw, 64px) 70px;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 16px;
+  padding: 18px 40px 64px;
 }
 
 .panel {
-  padding: clamp(18px, 2vw, 26px);
+  padding: 22px;
 }
 
 .panelHeader {
@@ -223,13 +267,13 @@ h1 {
   justify-content: space-between;
   gap: 14px;
   align-items: flex-start;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .panel h2 {
   margin-bottom: 0;
-  font-size: clamp(1.55rem, 2.4vw, 2.4rem);
-  line-height: 1;
+  font-size: 1.85rem;
+  line-height: 1.05;
 }
 
 .ghostButton {
@@ -240,14 +284,15 @@ h1 {
 .timeline {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .timelineItem {
-  min-height: 112px;
+  min-height: 104px;
   border: 1px solid var(--line);
+  border-radius: 8px;
   padding: 12px;
-  background: #fbfcf8;
+  background: #fbfcf9;
 }
 
 .timelineItem span {
@@ -256,15 +301,17 @@ h1 {
   height: 28px;
   place-items: center;
   margin-bottom: 12px;
-  background: var(--cyan);
+  border-radius: 999px;
+  background: var(--lime);
   font-weight: 900;
 }
 
 .checkoutBox {
-  margin-top: 16px;
-  padding: 16px;
+  margin-top: 14px;
+  padding: 14px;
   border: 1px solid var(--line);
-  background: #f3faf6;
+  border-radius: 8px;
+  background: #f7fbf8;
   overflow-wrap: anywhere;
 }
 
@@ -285,12 +332,13 @@ h1 {
 .payoutRows a,
 .codeLine {
   display: grid;
-  grid-template-columns: 84px 1fr auto;
+  grid-template-columns: 82px 1fr auto;
   gap: 12px;
   align-items: center;
   min-height: 62px;
   border: 1px solid var(--line);
-  background: #fbfcf8;
+  border-radius: 8px;
+  background: #fbfcf9;
   padding: 12px;
   text-align: left;
   text-decoration: none;
@@ -329,13 +377,14 @@ h1 {
   min-height: 88px;
   padding: 14px;
   border: 1px solid var(--line);
-  background: #fbfcf8;
+  border-radius: 8px;
+  background: #fbfcf9;
 }
 
 .proofGrid strong {
   display: block;
   margin-top: 8px;
-  font-size: 1.18rem;
+  font-size: 1.12rem;
 }
 
 .payoutRows a {
@@ -349,12 +398,13 @@ h1 {
 
 .pill {
   border: 1px solid var(--blue);
+  border-radius: 999px;
   padding: 6px 9px;
 }
 
 .codeLine {
   grid-template-columns: 1fr auto;
-  background: #141816;
+  background: #151915;
   color: white;
   font-family: Consolas, "Courier New", monospace;
 }
@@ -364,10 +414,20 @@ h1 {
 }
 
 @media (max-width: 1020px) {
+  .appHero {
+    padding: 22px;
+  }
+
   .heroLayout,
   .workspace,
   .metricsBand {
     grid-template-columns: 1fr;
+  }
+
+  .metricsBand,
+  .workspace {
+    padding-left: 22px;
+    padding-right: 22px;
   }
 
   .timeline,
@@ -383,9 +443,15 @@ h1 {
   }
 
   h1 {
-    font-size: 3rem;
+    font-size: 2.18rem;
+    line-height: 1.05;
   }
 
+  .lead {
+    font-size: 1rem;
+  }
+
+  .modelRows,
   .timeline,
   .proofGrid {
     grid-template-columns: 1fr;
@@ -398,5 +464,8 @@ h1 {
   .commandBar button {
     width: 100%;
   }
-}
 
+  .panel h2 {
+    font-size: 1.55rem;
+  }
+}
