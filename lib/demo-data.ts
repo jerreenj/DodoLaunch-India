@@ -1,46 +1,54 @@
 import type { DemoState, Recipient, SettlementEntry } from "./types";
 
 export const merchant = {
-  name: "BharatAI Ops",
-  location: "Bengaluru, India",
-  product: "AI support copilot monthly plan",
+  name: "Madras MicroApps",
+  location: "Chennai, India",
+  product: "SupportAgent Pro credit pack",
   customer: "OrbitWorks Pte Ltd",
-  amount: 2480,
+  amount: 1280,
   currency: "USDG" as const,
 };
 
 export const recipients: Recipient[] = [
   {
-    id: "rec_contractor",
-    name: "Frontend contractor",
-    role: "contractor",
-    region: "Philippines",
-    wallet: "D3moConTractor111111111111111111111111111",
-    splitBps: 2000,
+    id: "rec_founder",
+    name: "Founder treasury",
+    role: "founder",
+    region: "India",
+    wallet: "D3moFounder1111111111111111111111111111",
+    splitBps: 7000,
   },
   {
     id: "rec_affiliate",
-    name: "Growth affiliate",
+    name: "Launch affiliate",
     role: "affiliate",
     region: "UAE",
     wallet: "D3moAffiliate222222222222222222222222222",
-    splitBps: 500,
+    splitBps: 1000,
   },
   {
     id: "rec_vendor",
-    name: "Data labeling vendor",
+    name: "Data/API vendor",
     role: "vendor",
     region: "Vietnam",
     wallet: "D3moVendor3333333333333333333333333333",
-    splitBps: 500,
+    splitBps: 1000,
   },
   {
     id: "rec_agent",
-    name: "Agent API provider",
+    name: "Agent runtime provider",
     role: "agent",
     region: "India",
     wallet: "D3moAgent44444444444444444444444444444",
-    splitBps: 300,
+    splitBps: 500,
+  },
+  {
+    id: "rec_platform",
+    name: "DodoLaunch platform fee",
+    role: "platform",
+    region: "India",
+    wallet: "D3moPlatform55555555555555555555555555",
+    splitBps: 500,
   },
 ];
 
@@ -74,4 +82,3 @@ export const initialDemoState: DemoState = {
   settlementEntries: [initialSettlement],
   payoutBatches: [],
 };
-

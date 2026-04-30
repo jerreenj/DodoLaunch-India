@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     settlementEntry: settlementFromDodoEvent(event),
     message:
       signatureStatus === "verified"
-        ? "Webhook signature verified and normalized into the settlement ledger."
-        : "Demo webhook accepted in free demo mode and normalized into the settlement ledger.",
+        ? "Webhook signature verified and normalized into the revenue ledger."
+        : "Demo sale webhook accepted and normalized into the revenue ledger.",
   });
 }

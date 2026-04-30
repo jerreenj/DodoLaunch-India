@@ -2,7 +2,7 @@
   "name": "solana-dodo-india",
   "version": "0.1.0",
   "private": false,
-  "description": "Dodo Payments to Solana stablecoin payout dashboard for Indian SaaS and AI founders.",
+  "description": "Launchpad for Indian AI and SaaS builders to sell with Dodo Payments and split revenue on Solana.",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",

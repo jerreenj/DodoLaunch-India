@@ -12,14 +12,14 @@ import type {
   X402Event,
 } from "../lib/types";
 
-const storageKey = "dodosettle-demo-state";
+const storageKey = "dodolaunch-demo-state";
 
 const timeline = [
-  "Dodo checkout created",
-  "Webhook verified or demo-accepted",
-  "Settlement ledger updated",
-  "Solana devnet payout batch prepared",
-  "x402 agent payment routed",
+  "Paid product launched",
+  "Dodo sale webhook received",
+  "Revenue ledger updated",
+  "Solana split batch prepared",
+  "x402 API sale routed",
 ];
 
 export default function Home() {
@@ -151,30 +151,30 @@ export default function Home() {
     <main>
       <section className="appHero">
         <nav className="topbar">
-          <strong>DodoSettle India</strong>
-          <span>Revenue-to-payouts OS</span>
+          <strong>DodoLaunch India</strong>
+          <span>AI/SaaS checkout launchpad</span>
         </nav>
         <div className="heroLayout">
           <div>
-            <p className="eyebrow">Dodo revenue to Solana settlement</p>
-            <h1>Global SaaS revenue in. Programmable stablecoin payouts out.</h1>
+            <p className="eyebrow">Dodo checkout to revenue splits</p>
+            <h1>Launch paid AI products with Dodo. Split revenue on Solana.</h1>
             <p className="lead">
-              An operating dashboard for Indian SaaS and AI founders:
-              Dodo checkout events become settlement ledger entries, payout rules become
-              Solana devnet batches, and x402 agent payments join the same flow.
+              A launchpad for Indian AI and SaaS builders to sell subscriptions,
+              credit packs, and paid APIs through Dodo Payments, then split revenue
+              to founders, affiliates, vendors, agents, and the platform.
             </p>
             <div className="commandBar">
               <button onClick={createCheckout} disabled={busyAction !== null}>
-                {busyAction === "checkout" ? "Creating..." : "Create Dodo Checkout"}
+                {busyAction === "checkout" ? "Creating..." : "Create Paid Product"}
               </button>
               <button onClick={replayWebhook} disabled={busyAction !== null}>
-                {busyAction === "webhook" ? "Replaying..." : "Replay Webhook"}
+                {busyAction === "webhook" ? "Replaying..." : "Replay Sale Webhook"}
               </button>
               <button onClick={preparePayout} disabled={busyAction !== null}>
-                {busyAction === "payout" ? "Preparing..." : "Prepare Payout Batch"}
+                {busyAction === "payout" ? "Preparing..." : "Build Revenue Split"}
               </button>
               <button onClick={runX402Demo} disabled={busyAction !== null}>
-                {busyAction === "x402" ? "Routing..." : "Run x402 Demo"}
+                {busyAction === "x402" ? "Routing..." : "Run x402 API Sale"}
               </button>
             </div>
             <p className="statusLine">{message}</p>
@@ -193,11 +193,11 @@ export default function Home() {
 
       <section className="metricsBand" aria-label="Business metrics">
         <div className="metric">
-          <span>Demo revenue</span>
+          <span>Demo GMV</span>
           <strong>{formatMoney(totalRevenue)}</strong>
         </div>
         <div className="metric">
-          <span>Dodo events</span>
+          <span>Dodo sales</span>
           <strong>{state.dodoEvents.length}</strong>
         </div>
         <div className="metric">
@@ -215,7 +215,7 @@ export default function Home() {
           <div className="panelHeader">
             <div>
               <p className="eyebrow">Judge flow</p>
-              <h2>Click-through demo path</h2>
+              <h2>Launch-to-revenue flow</h2>
             </div>
             <button className="ghostButton" onClick={resetDemo}>
               Reset
@@ -232,15 +232,15 @@ export default function Home() {
           <div className="checkoutBox">
             <span>Latest checkout</span>
             <strong>{latestCheckout?.sessionId ?? "No checkout yet"}</strong>
-            <p>{latestCheckout?.checkoutUrl ?? "Create a Dodo demo checkout to start the live story."}</p>
+            <p>{latestCheckout?.checkoutUrl ?? "Create a paid product to start the Dodo sale story."}</p>
           </div>
         </div>
 
         <div className="panel ledgerPanel">
           <div className="panelHeader">
             <div>
-              <p className="eyebrow">Settlement ledger</p>
-              <h2>Verified revenue</h2>
+              <p className="eyebrow">Revenue ledger</p>
+              <h2>Product sales</h2>
             </div>
           </div>
           <div className="ledgerList">
@@ -261,8 +261,8 @@ export default function Home() {
         <div className="panel recipientsPanel">
           <div className="panelHeader">
             <div>
-              <p className="eyebrow">Routing rules</p>
-              <h2>Payout split</h2>
+              <p className="eyebrow">Revenue rules</p>
+              <h2>Split model</h2>
             </div>
             <strong>{recipients.reduce((sum, item) => sum + item.splitBps, 0) / 100}% routed</strong>
           </div>
@@ -285,7 +285,7 @@ export default function Home() {
           <div className="panelHeader">
             <div>
               <p className="eyebrow">Solana devnet</p>
-              <h2>Payout proof</h2>
+              <h2>Split proof</h2>
             </div>
             <span className="pill">{latestBatch?.network ?? "devnet"}</span>
           </div>
@@ -293,7 +293,7 @@ export default function Home() {
             <>
               <div className="proofGrid">
                 <div>
-                  <span>Batch total</span>
+                  <span>Split total</span>
                   <strong>{formatMoney(latestBatch.total.amount, latestBatch.total.currency)}</strong>
                 </div>
                 <div>
@@ -301,7 +301,7 @@ export default function Home() {
                   <strong>${latestBatch.feeEstimateUsd.toFixed(4)}</strong>
                 </div>
                 <div>
-                  <span>Wire estimate avoided</span>
+                  <span>Manual ops avoided</span>
                   <strong>${latestBatch.bankWireEstimateUsd}</strong>
                 </div>
               </div>
@@ -316,7 +316,7 @@ export default function Home() {
             </>
           ) : (
             <p className="emptyState">
-              Prepare a payout batch to generate deterministic devnet-style signatures and proof links.
+              Build a revenue split to generate deterministic devnet-style signatures and proof links.
             </p>
           )}
         </div>
@@ -325,7 +325,7 @@ export default function Home() {
           <div className="panelHeader">
             <div>
               <p className="eyebrow">Bonus</p>
-              <h2>x402 agent payments</h2>
+              <h2>x402 API sales</h2>
             </div>
           </div>
           <p>{x402Preview}</p>

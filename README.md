@@ -1,36 +1,40 @@
-# DodoSettle India
+# DodoLaunch India
 
 Open-source hackathon project for the **Payments Track | Superteam India x Dodo Payments** at Solana Frontier.
 
-**DodoSettle India turns Dodo Payments revenue into programmable Solana stablecoin payout batches for Indian SaaS and AI founders. The hackathon build path costs $0 by using free test/demo tooling, devnet/simulation, browser state, GitHub, and Vercel free tier.**
+**DodoLaunch India helps Indian AI and SaaS builders launch paid products with Dodo Payments, then split revenue to founders, affiliates, vendors, agents, and the platform through Solana-ready settlement batches.**
 
-## Concept
+The build path costs **$0** by using free test/demo tooling, devnet/simulation, browser state, GitHub, and Vercel free tier. The product itself is designed to create real revenue after launch.
 
-DodoSettle India is a stablecoin settlement layer for Indian SaaS, AI, and creator businesses that already sell globally through Dodo Payments. The app helps merchants collect through Dodo, track revenue events, and prepare low-cost Solana stablecoin payouts for contractors, vendors, affiliates, and AI agents.
+## Product
 
-The first prototype focuses on a simple workflow:
+DodoLaunch is a paid-product launchpad for Indian micro-SaaS and AI builders.
 
-1. A merchant creates a Dodo-powered checkout or payment link for a customer.
-2. Dodo webhooks update the merchant's receivables dashboard.
-3. The merchant builds a payout batch for global contractors.
-4. The app prepares Solana stablecoin transfers and shows speed/cost savings against bank wires.
+Builders can package an AI tool, API, credit pack, template, or SaaS subscription, create a Dodo-powered checkout, track sales, and automatically calculate revenue splits for everyone involved in the sale.
 
-## Why This Fits The Track
+The first prototype focuses on this workflow:
 
-- **Dodo Payments:** checkout, payment links, subscriptions, and webhook events are the merchant-facing payment layer.
-- **Solana stablecoins:** fast settlement and programmable payout batches for cross-border business payments.
-- **India focus:** built for Indian SaaS and AI founders who sell globally but still face slow, expensive, manual payout operations.
-- **Defined user:** founders and finance operators managing invoices, contractor payments, and treasury movement.
+1. A founder launches a paid AI/SaaS product using a Dodo checkout.
+2. Dodo sale webhooks update the revenue ledger.
+3. Split rules calculate founder revenue, affiliate commissions, vendor/API costs, agent/runtime fees, and the DodoLaunch platform fee.
+4. The app prepares Solana stablecoin settlement batches and proof links for those splits.
+5. x402 demonstrates paid API access for agentic buyers.
+
+## Why This Is Useful
+
+- **For founders:** ship paid products faster without building billing, affiliate splits, or revenue operations from scratch.
+- **For Dodo Payments:** brings new SaaS/AI merchants, checkout sessions, subscriptions, credit packs, and payment volume into Dodo.
+- **For us:** DodoLaunch can earn a platform fee on successful product revenue, shown in the demo split model.
+- **For Solana:** stablecoins become the programmable settlement layer for affiliates, vendors, API providers, and global collaborators.
 
 ## Implemented Demo
 
-- Interactive operator dashboard for Dodo payment events.
+- Interactive launch dashboard for a paid AI product.
 - Dodo checkout route with free test mode or built-in demo mode.
-- Webhook endpoint that normalizes payment events into a settlement ledger.
-- Contractor/vendor/affiliate/agent directory with split rules.
-- Solana devnet/simulate payout batch builder with proof links.
-- Demo analytics comparing bank wire fees/time against Solana settlement.
-- x402-style HTTP 402 demo for agent/API payments.
+- Dodo sale webhook route that normalizes events into a revenue ledger.
+- Revenue split model for founder, affiliate, vendor, agent/runtime, and platform fee.
+- Solana devnet/simulate settlement batch builder with proof links.
+- x402-style HTTP 402 demo for paid agent/API access.
 - Browser-local demo state with no hosted database.
 - Vercel free-tier deployment path with no required secrets.
 
@@ -53,7 +57,7 @@ The hackathon version runs without spending any money:
 - No mainnet SOL, USDC, or paid RPC is used.
 - No hosted database is required; demo state is stored in the browser.
 - Optional real test credentials live only in `.env.local`.
-- The default payout path is Solana simulation/devnet proof links.
+- The default settlement path is Solana simulation/devnet proof links.
 
 ## Local Development
 
@@ -76,10 +80,10 @@ Leaving the values blank is valid and keeps the app in free demo mode.
 
 ## Demo Flow
 
-1. Click **Create Dodo Checkout**.
-2. Click **Replay Webhook** to create a settlement ledger entry.
-3. Click **Prepare Payout Batch** to generate Solana devnet-style payout proof.
-4. Click **Run x402 Demo** to show the HTTP 402 agent payment path.
+1. Click **Create Paid Product**.
+2. Click **Replay Sale Webhook** to create a Dodo revenue event.
+3. Click **Build Revenue Split** to generate the Solana settlement batch.
+4. Click **Run x402 API Sale** to show paid API access for agentic buyers.
 
 ## Submission Checklist
 
@@ -88,7 +92,7 @@ Leaving the values blank is valid and keeps the app in free demo mode.
 - Demo runs with empty `.env.local`.
 - Build passes with `npm run build`.
 - No secrets, tokens, private keys, or paid API keys are committed.
-- Demo video shows Dodo checkout, webhook, ledger, payout batch, and x402 bonus.
+- Demo video shows Dodo checkout, sale webhook, revenue ledger, split batch, platform fee, and x402 API sale.
 
 ## Resources
 

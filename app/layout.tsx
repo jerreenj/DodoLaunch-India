@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Solana Dodo India",
+  title: "DodoLaunch India",
   description:
-    "Stablecoin settlement dashboard for Indian SaaS and AI businesses using Dodo Payments and Solana.",
+    "Launchpad for Indian AI and SaaS builders to sell with Dodo Payments and split revenue on Solana.",
 };
 
 export default function RootLayout({
@@ -18,4 +18,3 @@ export default function RootLayout({
     </html>
   );
 }
-

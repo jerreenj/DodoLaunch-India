@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     checkout,
     message:
       checkout.mode === "test"
-        ? "Dodo test checkout created with free test credentials."
-        : "Free demo checkout created without requiring Dodo credentials.",
+        ? "Dodo test checkout created for the paid AI product."
+        : "Demo Dodo checkout created for the paid AI product without requiring credentials.",
   });
 }

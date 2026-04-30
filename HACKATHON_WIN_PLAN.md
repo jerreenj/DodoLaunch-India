@@ -1,26 +1,26 @@
-# Hackathon Win Plan: Solana Dodo India
+# Hackathon Win Plan: DodoLaunch India
 
 ## Product Bet
 
-Build **DodoSettle India**, a revenue-to-payouts operating system for Indian SaaS, AI, and creator businesses.
+Build **DodoLaunch India**, a launchpad that helps Indian AI and SaaS builders create paid products with Dodo Payments and automate revenue splits through Solana-ready settlement batches.
 
-**One-line pitch:** DodoSettle lets Indian SaaS founders collect global revenue through Dodo Payments, then route verified revenue into fast Solana stablecoin payouts for contractors, vendors, affiliates, and AI agents.
+**One-line pitch:** DodoLaunch turns Dodo Payments into the launch rail for Indian AI/SaaS products and Solana stablecoins into the programmable revenue-split rail.
 
-This is stronger than a simple stablecoin checkout because it uses both sides of the track:
+This is stronger than a generic payout dashboard because it creates revenue:
 
-- **Dodo Payments** handles real merchant monetization: checkout sessions, products, subscriptions, payment events, and webhooks.
-- **Solana stablecoins** handle programmable settlement: batch payouts, splits, escrow, transparent settlement proofs, and near-instant cross-border movement.
-- **India-specific pain** is clear: Indian SaaS/AI teams can sell globally, but cross-border payouts to contributors, vendors, and remote teams are slow, expensive, and operationally messy.
-- **x402 bonus angle**: AI agents can pay for API/data access and receive revenue splits without manual billing workflows.
-- **Free build path**: the hackathon implementation uses Dodo demo/test mode, Solana devnet/simulation, browser state, GitHub, and Vercel free tier only so Jerreen spends $0 building and demoing it.
+- **Founders earn** by selling subscriptions, API credits, templates, and AI tools.
+- **Dodo earns** because the product brings new merchants, checkout sessions, subscriptions, and payment volume.
+- **DodoLaunch earns** through a platform fee on launched products.
+- **Solana matters** because revenue is split programmatically between founder, affiliate, vendor, agent/runtime provider, and platform.
+- **x402 bonus angle** adds paid API access for AI agents and autonomous buyers.
 
 ## Free Build Constraint
 
-The project must not require a single dollar to build, demo, deploy, or judge.
+The product can generate real revenue later, but Jerreen should spend **$0 building and demoing it**.
 
 - Default Dodo path is demo mode; free Dodo test credentials are optional.
 - Default Solana path is simulation with devnet-style proof links; devnet tokens are optional.
-- No mainnet transactions.
+- No mainnet transactions during the hackathon build.
 - No paid RPC.
 - No hosted database bill.
 - No paid AI, analytics, email, storage, or auth services.
@@ -29,206 +29,120 @@ The project must not require a single dollar to build, demo, deploy, or judge.
 
 ## User
 
-Primary user: an Indian SaaS or AI founder selling globally through Dodo Payments.
+Primary user: an Indian AI/SaaS builder who wants to sell a product quickly without building billing, affiliate tracking, vendor splits, or payout operations.
 
-Secondary user: the finance/operator person who has to pay contractors, vendors, affiliates, and API providers after revenue lands.
+Secondary users:
 
-Buyer pain:
-
-- Customers can pay globally, but payout operations remain manual.
-- Bank wires are slow and expensive.
-- Contractor payout status is scattered across spreadsheets, bank portals, wallet records, and invoices.
-- Revenue sharing with affiliates, creators, model providers, or AI agents is painful at small transaction sizes.
+- Affiliates who help distribute the product.
+- Data/API vendors who need usage-based revenue share.
+- Agent/runtime providers who get paid when their service is used.
+- Dodo Payments, which gets more merchants and checkout volume.
 
 ## Winning Demo Story
 
-The demo should feel like a live business workflow, not a crypto toy.
+The demo should feel like launching a real paid product.
 
-1. Merchant creates a product/checkout in DodoSettle.
-2. Dodo checkout session/payment link is created through the Dodo Payments API.
-3. A simulated or test Dodo webhook marks payment as successful.
-4. The app maps the payment into a settlement ledger.
-5. The merchant applies routing rules:
-   - 70% retained as merchant revenue
-   - 20% contractor payout
-   - 5% affiliate/referral payout
-   - 5% AI/API provider payout
-6. DodoSettle prepares a Solana stablecoin payout batch.
-7. The app simulates or sends devnet token transfers.
-8. The dashboard shows the status: Dodo payment verified, payout batch prepared, transfers settled, settlement proof available.
-9. Bonus: an x402-protected API endpoint charges an AI agent per request and routes a split to the API provider.
-
-## Prize Narrative
-
-Judges should remember one sentence:
-
-> DodoSettle turns Dodo Payments into the global revenue rail and Solana stablecoins into the programmable settlement rail for Indian SaaS and AI businesses.
-
-Why this can win:
-
-- It integrates Dodo in a meaningful way, not just as a logo or fake button.
-- It solves a specific business problem for a specific user.
-- It shows why Solana matters: speed, low cost, programmable batch settlement, revenue splits, and transparent transaction proofs.
-- It has a credible India angle without getting trapped in regulated consumer remittance.
-- It can show traction quickly through pilots with indie SaaS founders, agencies, AI tool builders, or creator businesses.
+1. Founder creates a paid product: **SupportAgent Pro credit pack**.
+2. DodoLaunch creates a Dodo checkout or demo checkout.
+3. A Dodo sale webhook marks the product as paid.
+4. The revenue ledger records the sale.
+5. Split rules distribute revenue:
+   - 70% founder treasury
+   - 10% launch affiliate
+   - 10% data/API vendor
+   - 5% agent runtime provider
+   - 5% DodoLaunch platform fee
+6. Solana devnet/simulation prepares settlement proofs for every split.
+7. x402 demo shows an agent buying paid API access and joining the same revenue ledger.
+8. Judges see a product that can make money for founders, Dodo, and us.
 
 ## MVP Scope
 
 ### Must Ship
 
-- Landing/dashboard that explains the workflow visually.
-- Merchant onboarding in demo mode.
-- Dodo checkout creation route.
-- Dodo webhook route with signature verification path.
-- Settlement ledger table.
-- Contractor/vendor/affiliate directory.
-- Payout rule builder.
-- Solana payout batch preview.
-- x402-style HTTP 402 demo endpoint.
-- Devnet transfer execution or realistic transaction simulation.
-- Settlement proof page with links/signatures.
-- Submission README with screenshots, architecture, setup, and demo script.
+- Launch dashboard for one paid AI/SaaS product.
+- Dodo checkout creation route with demo fallback.
+- Dodo sale webhook route.
+- Revenue ledger.
+- Split model with founder, affiliate, vendor, agent/runtime, and platform fee.
+- Solana settlement batch preview with proof links.
+- x402-style paid API endpoint demo.
+- README with free build path and revenue model.
+- Demo script for a 2-minute judging walkthrough.
 
 ### Should Ship
 
-- CSV import for contractors.
-- Exportable payout report.
-- Fee/time comparison against bank wire.
-- Product selector for Dodo product IDs.
-- Simple wallet connection for treasury authorization.
-- x402-protected paid API route demo.
+- CSV export for revenue split report.
+- Product configuration form.
+- Screenshot/GIF for submission.
+- Vercel free-tier deployment.
+- Submission copy explaining why this helps Dodo acquire merchants.
 
 ### Do Not Build Yet
 
-- Full payroll compliance.
+- Real production custody.
+- Mainnet payments.
+- Paid RPC.
+- Hosted database.
 - KYC/KYB.
 - Fiat offramp.
-- Real production custody.
-- Complex DeFi yield strategies.
-- Multi-chain routing.
+- Full marketplace discovery.
 
-Those are future roadmap, not MVP. The hackathon demo must stay sharp.
+Those come after the hackathon if the demo gets traction.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-  Customer["Global customer"] --> Dodo["Dodo checkout/session"]
-  Dodo --> Webhook["Dodo webhook endpoint"]
-  Webhook --> Ledger["Settlement ledger"]
-  Ledger --> Rules["Routing rules"]
-  Rules --> Batch["Solana payout batch"]
-  Batch --> Wallet["Merchant treasury wallet"]
-  Wallet --> Recipients["Contractors, affiliates, vendors, agents"]
-  Agent["AI agent / API buyer"] --> X402["x402 paid API route"]
+  Founder["Indian AI/SaaS founder"] --> Launch["DodoLaunch product setup"]
+  Launch --> Dodo["Dodo checkout/session"]
+  Buyer["Customer or agent buyer"] --> Dodo
+  Dodo --> Webhook["Dodo sale webhook"]
+  Webhook --> Ledger["Revenue ledger"]
+  Ledger --> Rules["Revenue split rules"]
+  Rules --> Batch["Solana settlement batch"]
+  Batch --> Parties["Founder, affiliate, vendor, agent, platform"]
+  Agent["AI agent buyer"] --> X402["x402 paid API route"]
   X402 --> Ledger
 ```
 
-Core tables/entities:
+Core entities:
 
-- `Merchant`: business profile, country, Dodo environment, treasury wallet.
-- `DodoPaymentEvent`: raw webhook payload, event type, signature status, payment ID.
-- `SettlementEntry`: normalized revenue item with currency, amount, status.
-- `Recipient`: contractor/vendor/affiliate/agent name, role, wallet, region.
-- `RoutingRule`: percentage or fixed amount split.
-- `PayoutBatch`: recipients, amounts, token mint, network, status.
-- `SolanaTransfer`: transaction signature, recipient, token, amount, confirmation status.
+- `DodoCheckout`: paid product checkout/session.
+- `DodoPaymentEvent`: sale webhook event.
+- `SettlementEntry`: normalized product revenue.
+- `Recipient`: founder, affiliate, vendor, agent/runtime, or platform.
+- `PayoutBatch`: Solana-ready revenue split batch.
+- `X402Event`: paid API/agent access event.
 
-## Build Timeline
+## 2-Day Finish Plan
 
-### Day 1: Product + Repo Foundation
+### Day 1: Product Pivot + Core Demo
 
-- Public GitHub repo.
-- README, license, env template.
-- Next.js app shell.
-- Dodo and Solana placeholder API routes.
-- Hackathon plan document.
+- Rename visible product to DodoLaunch India.
+- Make dashboard tell the launchpad story.
+- Show paid product, Dodo sale event, revenue ledger, split model, platform fee, and Solana proof.
+- Keep free build path in docs, but not as the product pitch.
+- Verify app works with empty `.env.local`.
 
-### Day 2: Dodo Core
+### Day 2: Submission Polish
 
-- Add Dodo TypeScript SDK.
-- Implement checkout/session creation in test mode.
-- Add merchant product config through env or dashboard form.
-- Store checkout attempts in local/demo ledger.
-
-### Day 3: Webhooks + Ledger
-
-- Implement raw-body webhook handling.
-- Verify Dodo webhook signatures when secret is present.
-- Normalize payment events into settlement entries.
-- Add event replay/demo seed button for judging.
-
-### Day 4: Recipient + Rules
-
-- Build recipient directory.
-- Add payout split rules.
-- Generate payout batch from ledger entries.
-- Validate totals, missing wallets, and unsupported rows.
-
-### Day 5: Solana Stablecoin Transfers
-
-- Add Solana web3 tooling.
-- Support devnet token transfer simulation first.
-- Add transaction builder and explorer links.
-- Keep a no-key demo mode so judges can click through safely.
-
-### Day 6: x402 Bonus
-
-- Add a paid API route demo.
-- Show agent request -> 402 payment required -> paid access path.
-- Route x402 revenue into the same settlement ledger.
-
-### Day 7: Polish Demo
-
-- Replace generic UI with operator-grade dashboard.
-- Add demo data that looks like a real Indian AI/SaaS company.
-- Add screenshots/GIF.
-- Write 2-minute demo script.
-
-### Day 8-10: Traction Sprint
-
-- Ask 5-10 Indian SaaS/AI founders/operators for feedback.
-- Get 2-3 short quotes or pilot intents.
-- Record one real payment/webhook test if Dodo test account is available.
-- Add feedback section to submission.
-
-### Day 11-12: Submission Hardening
-
-- Vercel deploy.
-- Confirm deployment uses free tier only.
-- Verify mobile and desktop.
-- Test fresh clone setup.
-- Test empty `.env.local` free demo mode.
-- Add `.env.example` completeness.
-- Run build and audit.
-- Finalize README and demo video.
-
-### Day 13: Submit
-
-- Submit to Superteam Earn and Global Hackathon.
-- Include GitHub, Vercel URL, demo video, pitch, and traction notes.
+- Add CSV export or screenshot-ready split report if time allows.
+- Deploy on Vercel free tier.
+- Record/write 2-minute demo script.
+- Finalize README and hackathon plan.
+- Run build, typecheck, audit, and secret scan.
+- Submit GitHub, Vercel URL, and demo story.
 
 ## Demo Script
 
-1. "This is DodoSettle for Indian SaaS and AI founders."
-2. "The founder sells globally with Dodo Payments."
-3. "When a payment succeeds, our Dodo webhook records it in the settlement ledger."
-4. "The founder has payout rules for contractors, affiliates, vendors, and agents."
-5. "DodoSettle creates a Solana stablecoin payout batch from verified revenue."
-6. "Compared with wires, settlement is faster, cheaper, and programmable."
-7. "For AI-native products, x402 lets agents pay per API call and routes revenue automatically."
-8. "This makes Dodo the revenue engine and Solana the settlement engine."
-
-## What We Need From Jerreen
-
-These are not blockers for building demo mode, but they make the submission stronger:
-
-- Dodo test API key and webhook secret.
-- A real Indian SaaS/AI use case to name in the demo.
-- One or two real contractor/vendor payout examples.
-- A short founder story: what problem are we personally solving?
-
-If those are not ready, we continue with realistic demo data and swap real values later.
+1. "This is DodoLaunch India, a launchpad for Indian AI and SaaS builders."
+2. "A founder launches a paid AI product using Dodo Payments."
+3. "When a Dodo sale succeeds, our webhook records revenue in the ledger."
+4. "DodoLaunch automatically splits revenue between founder, affiliate, vendor, agent/runtime provider, and our platform fee."
+5. "Solana provides the programmable settlement layer for those splits."
+6. "x402 adds paid API access for AI agents."
+7. "This helps founders earn, gives Dodo more merchants and checkout volume, and gives us a revenue model."
 
 ## Integration References
 

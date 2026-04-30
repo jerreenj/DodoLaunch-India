@@ -23,7 +23,6 @@ export async function GET(request: Request) {
       signal: "South-east Asia support vendors are cheapest for night-shift coverage.",
       confidence: "demo",
     },
-    message: "Demo x402 payment accepted and routed into the settlement ledger.",
+    message: "Demo x402 API sale accepted and routed into the revenue ledger.",
   });
 }
-

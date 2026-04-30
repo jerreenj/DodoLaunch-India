@@ -28,7 +28,7 @@ export function createX402Event(): X402Event {
     source: "x402",
     type: "x402.payment.settled",
     buyer: "Autonomous support agent",
-    resource: "Paid API call: regional pricing intelligence",
+    resource: "Paid API call: support-agent answer pack",
     amount: { amount: 2.4, currency: "USDG" },
     proof,
     receivedAt: now,

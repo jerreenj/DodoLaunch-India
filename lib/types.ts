@@ -52,7 +52,7 @@ export type SettlementEntry = {
   receivedAt: string;
 };
 
-export type RecipientRole = "contractor" | "affiliate" | "vendor" | "agent";
+export type RecipientRole = "founder" | "affiliate" | "vendor" | "agent" | "platform";
 
 export type Recipient = {
   id: string;
@@ -92,4 +92,3 @@ export type DemoState = {
   settlementEntries: SettlementEntry[];
   payoutBatches: PayoutBatch[];
 };
-
