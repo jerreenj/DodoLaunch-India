@@ -73,6 +73,23 @@ p {
   font-size: 0.95rem;
 }
 
+.safetyBanner {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  max-width: 1180px;
+  margin: 0 auto 24px;
+  border: 1px solid #bfd8cb;
+  border-radius: 8px;
+  background: #edf8f2;
+  padding: 12px 14px;
+}
+
+.safetyBanner span {
+  color: #375346;
+}
+
 .topbar strong {
   font-size: 1.05rem;
 }
@@ -161,6 +178,30 @@ h1 {
 .commandBar button:nth-child(4) {
   background: var(--coral);
   border-color: var(--coral);
+}
+
+.modeSwitch {
+  display: inline-flex;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: white;
+}
+
+.modeSwitch button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  padding: 7px 11px;
+  font-weight: 800;
+}
+
+.modeSwitch .activeMode {
+  background: var(--ink);
+  color: white;
 }
 
 .statusLine {
@@ -277,6 +318,92 @@ h1 {
 
 .setupPanel {
   grid-column: 1 / -1;
+}
+
+.guidePanel,
+.testerPanel,
+.feedbackPanel {
+  grid-column: 1 / -1;
+}
+
+.guideGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.guideStep {
+  min-height: 112px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 13px;
+}
+
+.guideStep span {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  background: var(--lime);
+  font-weight: 900;
+}
+
+.modeCopy {
+  display: grid;
+  gap: 10px;
+  color: #344139;
+}
+
+.modeCopy p,
+.feedbackPanel p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.devnetList {
+  display: grid;
+  gap: 10px;
+}
+
+.devnetBlock {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.devnetList div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 12px;
+}
+
+.devnetList a,
+.feedbackPanel a {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 42px;
+  align-items: center;
+  border-radius: 8px;
+  background: var(--blue);
+  color: white;
+  padding: 10px 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.feedbackPanel {
+  display: grid;
+  gap: 14px;
+}
+
+.feedbackPanel a {
+  background: var(--green);
 }
 
 .panel {
@@ -518,7 +645,8 @@ h1 {
   }
 
   .timeline,
-  .proofGrid {
+  .proofGrid,
+  .guideGrid {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -529,8 +657,10 @@ h1 {
 
 @media (max-width: 640px) {
   .topbar,
+  .safetyBanner,
   .panelHeader {
     flex-direction: column;
+    align-items: flex-start;
   }
 
   h1 {
@@ -545,8 +675,15 @@ h1 {
   .modelRows,
   .formGrid,
   .timeline,
+  .guideGrid,
   .proofGrid {
     grid-template-columns: 1fr;
+  }
+
+  .modeSwitch {
+    display: grid;
+    border-radius: 8px;
+    width: 100%;
   }
 
   .wideField {

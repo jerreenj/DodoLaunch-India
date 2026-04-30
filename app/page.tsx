@@ -24,12 +24,27 @@ const timeline = [
   "x402 API sale routed",
 ];
 
+const pilotSteps = [
+  "Keep Try without wallet selected for the first pass.",
+  "Edit the founder workspace with your product name, buyer, price, and launch note.",
+  "Create the paid product, replay the sale webhook, then build the revenue split.",
+  "Export the split CSV and send feedback through GitHub Issues.",
+];
+
+const devnetSteps = [
+  "Switch your wallet to Solana Devnet before testing.",
+  "Open faucet.solana.com and request devnet SOL for your wallet address.",
+  "CLI option: solana airdrop 2 <WALLET_ADDRESS> --url devnet.",
+  "Devnet SOL has no real value and cannot be moved to mainnet.",
+];
+
 export default function Home() {
   const [state, setState] = useState<DemoState>(initialDemoState);
   const [selectedSettlementId, setSelectedSettlementId] = useState(initialDemoState.settlementEntries[0].id);
   const [productConfig, setProductConfig] = useState<ProductConfig>(defaultProductConfig);
+  const [testMode, setTestMode] = useState<"no-wallet" | "wallet">("no-wallet");
   const [busyAction, setBusyAction] = useState<string | null>(null);
-  const [message, setMessage] = useState("Free demo path is ready. No secrets or paid services required.");
+  const [message, setMessage] = useState("Try without wallet is ready. Devnet/simulate only.");
   const [x402Preview, setX402Preview] = useState<string>("HTTP 402 preview is waiting.");
 
   useEffect(() => {
@@ -166,7 +181,7 @@ export default function Home() {
   function resetDemo() {
     setState(initialDemoState);
     setSelectedSettlementId(initialDemoState.settlementEntries[0].id);
-    setMessage("Demo reset. Free demo path is ready.");
+    setMessage("Demo reset. Try without wallet is ready.");
     setX402Preview("HTTP 402 preview is waiting.");
   }
 
@@ -215,6 +230,10 @@ export default function Home() {
           <strong>DodoLaunch India</strong>
           <span>AI/SaaS checkout launchpad</span>
         </nav>
+        <div className="safetyBanner" role="note">
+          <strong>Default tester mode: Try without wallet</strong>
+          <span>Devnet/simulation only. No mainnet. No paid services. No real funds required.</span>
+        </div>
         <div className="heroLayout">
           <div>
             <p className="eyebrow">Dodo checkout to revenue splits</p>
@@ -242,6 +261,28 @@ export default function Home() {
               </button>
               <button onClick={runX402Demo} disabled={busyAction !== null}>
                 {busyAction === "x402" ? "Routing..." : "Run x402 API Sale"}
+              </button>
+            </div>
+            <div className="modeSwitch" aria-label="Tester mode">
+              <button
+                className={testMode === "no-wallet" ? "activeMode" : ""}
+                onClick={() => {
+                  setTestMode("no-wallet");
+                  setMessage("Try without wallet mode selected. Best for the first 200 users.");
+                }}
+                type="button"
+              >
+                Try without wallet
+              </button>
+              <button
+                className={testMode === "wallet" ? "activeMode" : ""}
+                onClick={() => {
+                  setTestMode("wallet");
+                  setMessage("Wallet tester mode selected. Use Solana devnet only.");
+                }}
+                type="button"
+              >
+                Wallet tester
               </button>
             </div>
             <p className="statusLine">{message}</p>
@@ -296,6 +337,66 @@ export default function Home() {
       </section>
 
       <section className="workspace">
+        <div className="panel guidePanel">
+          <div>
+            <p className="eyebrow">First-time guide</p>
+            <h2>How to test DodoLaunch</h2>
+          </div>
+          <div className="guideGrid">
+            {pilotSteps.map((step, index) => (
+              <div className="guideStep" key={step}>
+                <span>{index + 1}</span>
+                <strong>{step}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel testerPanel">
+          <div className="panelHeader">
+            <div>
+              <p className="eyebrow">Tester mode</p>
+              <h2>{testMode === "no-wallet" ? "Try without wallet first" : "Wallet tester devnet setup"}</h2>
+            </div>
+            <span className="pill">{testMode === "no-wallet" ? "recommended" : "devnet only"}</span>
+          </div>
+          <div className="modeCopy">
+            <p>
+              This is the default for the first 200 users. They can configure a product, generate a Dodo demo
+              checkout, replay a sale, build a split report, and export CSV without connecting any wallet.
+            </p>
+            <strong>No wallet, no mainnet, no paid services.</strong>
+          </div>
+          <div className="devnetBlock">
+            <p className="eyebrow">Get devnet SOL for wallet testers</p>
+            <div className="devnetList">
+              {devnetSteps.map((step) => (
+                <div key={step}>{step}</div>
+              ))}
+              <a href="https://faucet.solana.com/" target="_blank" rel="noreferrer">
+                Open official Solana devnet faucet
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="panel feedbackPanel">
+          <div>
+            <p className="eyebrow">Feedback</p>
+            <h2>Send bugs before we scale to 200 users</h2>
+          </div>
+          <p>
+            Use this for broken flows, confusing copy, mobile layout issues, or Dodo/Solana integration notes.
+          </p>
+          <a
+            href="https://github.com/jerreenj/DodoLaunch-India/issues/new"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open GitHub Issue
+          </a>
+        </div>
+
         <div className="panel setupPanel">
           <div className="panelHeader">
             <div>

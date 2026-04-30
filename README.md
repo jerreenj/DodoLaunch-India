@@ -37,6 +37,11 @@ The first prototype focuses on this workflow:
 - Browser-generated CSV export for revenue split reports.
 - Solana devnet/simulate settlement batch builder with proof links.
 - x402-style HTTP 402 demo for paid agent/API access.
+- First-time user guide inside the app.
+- Default **Try without wallet** mode for early users.
+- Wallet tester instructions for getting devnet SOL from the official faucet.
+- GitHub Issues feedback CTA before scaling from 20 to 200 users.
+- Clear devnet-only/no-mainnet/no-paid-services labels.
 - Browser-local demo state with no hosted database.
 - Vercel free-tier deployment path with no required secrets.
 
@@ -87,6 +92,15 @@ Leaving the values blank is valid and keeps the app in free demo mode.
 3. Click **Build Revenue Split** to generate the Solana settlement batch.
 4. Click **Run x402 API Sale** to show paid API access for agentic buyers.
 5. Edit the product details in **Founder workspace** and export the split report CSV.
+6. Keep **Try without wallet** selected for normal testers, or use **Wallet tester** for devnet setup instructions.
+
+## Pilot Rollout
+
+1. Send the Vercel link to the first 20 users.
+2. Ask them to use **Try without wallet** first.
+3. Collect feedback through GitHub Issues.
+4. Fix confusing copy, broken flows, and mobile layout issues.
+5. Send to the next 200 users after the first feedback pass.
 
 ## Submission Checklist
 
