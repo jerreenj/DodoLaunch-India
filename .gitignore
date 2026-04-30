@@ -10,4 +10,5 @@ yarn-error.log*
 pnpm-debug.log*
 .vercel/
 *.tsbuildinfo
-
+dev-server*.log
+next-env.d.ts
