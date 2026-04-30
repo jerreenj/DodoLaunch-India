@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     batch,
     message:
       batch.mode === "simulate"
-        ? "Zero-dollar Solana payout simulation prepared. No wallet funding required."
+        ? "Free Solana payout simulation prepared. No wallet funding required."
         : "Devnet payout batch prepared. Use only free devnet tokens.",
   });
 }

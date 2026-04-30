@@ -15,7 +15,7 @@ export function paymentRequiredResponse() {
       },
     ],
     zeroDollar: true,
-    message: "Demo x402 flow only. No real funds are requested.",
+    message: "Demo x402 flow only. No real funds are requested during the free build path.",
   };
 }
 
@@ -34,4 +34,3 @@ export function createX402Event(): X402Event {
     receivedAt: now,
   };
 }
-

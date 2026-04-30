@@ -2,11 +2,11 @@
 
 Open-source hackathon project for the **Payments Track | Superteam India x Dodo Payments** at Solana Frontier.
 
-**DodoSettle India turns Dodo Payments revenue into programmable Solana devnet payout batches for Indian SaaS and AI founders, with a zero-dollar demo mode that needs no paid services, no mainnet funds, and no secrets.**
+**DodoSettle India turns Dodo Payments revenue into programmable Solana stablecoin payout batches for Indian SaaS and AI founders. The hackathon build path costs $0 by using free test/demo tooling, devnet/simulation, browser state, GitHub, and Vercel free tier.**
 
 ## Concept
 
-DodoSettle India is a zero-dollar stablecoin settlement layer for Indian SaaS, AI, and creator businesses that already sell globally through Dodo Payments. The app helps merchants collect through Dodo, track revenue events, and prepare low-cost Solana devnet/simulated stablecoin payouts for contractors, vendors, affiliates, and AI agents.
+DodoSettle India is a stablecoin settlement layer for Indian SaaS, AI, and creator businesses that already sell globally through Dodo Payments. The app helps merchants collect through Dodo, track revenue events, and prepare low-cost Solana stablecoin payouts for contractors, vendors, affiliates, and AI agents.
 
 The first prototype focuses on a simple workflow:
 
@@ -45,9 +45,9 @@ See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
 - x402-style HTTP 402 demo route
 - Vercel free-tier hosting
 
-## Zero-Dollar Mode
+## Free Build Path
 
-The app runs without spending any money:
+The hackathon version runs without spending any money:
 
 - No Dodo credentials are required for demo mode.
 - No mainnet SOL, USDC, or paid RPC is used.
@@ -72,7 +72,7 @@ Copy `.env.example` to `.env.local` when wiring real integrations.
 cp .env.example .env.local
 ```
 
-Leaving the values blank is valid and keeps the app in zero-dollar demo mode.
+Leaving the values blank is valid and keeps the app in free demo mode.
 
 ## Demo Flow
 

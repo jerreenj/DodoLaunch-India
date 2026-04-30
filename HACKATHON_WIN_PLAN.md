@@ -2,9 +2,9 @@
 
 ## Product Bet
 
-Build **DodoSettle India**, a zero-dollar revenue-to-payouts operating system for Indian SaaS, AI, and creator businesses.
+Build **DodoSettle India**, a revenue-to-payouts operating system for Indian SaaS, AI, and creator businesses.
 
-**One-line pitch:** DodoSettle lets Indian SaaS founders collect global revenue through Dodo Payments, then route verified revenue into fast Solana devnet/simulated stablecoin payouts for contractors, vendors, affiliates, and AI agents without spending a dollar during the hackathon.
+**One-line pitch:** DodoSettle lets Indian SaaS founders collect global revenue through Dodo Payments, then route verified revenue into fast Solana stablecoin payouts for contractors, vendors, affiliates, and AI agents.
 
 This is stronger than a simple stablecoin checkout because it uses both sides of the track:
 
@@ -12,9 +12,9 @@ This is stronger than a simple stablecoin checkout because it uses both sides of
 - **Solana stablecoins** handle programmable settlement: batch payouts, splits, escrow, transparent settlement proofs, and near-instant cross-border movement.
 - **India-specific pain** is clear: Indian SaaS/AI teams can sell globally, but cross-border payouts to contributors, vendors, and remote teams are slow, expensive, and operationally messy.
 - **x402 bonus angle**: AI agents can pay for API/data access and receive revenue splits without manual billing workflows.
-- **Zero-dollar delivery**: the default demo uses Dodo demo/test mode, Solana devnet/simulation, browser state, GitHub, and Vercel free tier only.
+- **Free build path**: the hackathon implementation uses Dodo demo/test mode, Solana devnet/simulation, browser state, GitHub, and Vercel free tier only so Jerreen spends $0 building and demoing it.
 
-## Zero-Dollar Constraint
+## Free Build Constraint
 
 The project must not require a single dollar to build, demo, deploy, or judge.
 
@@ -198,7 +198,7 @@ Core tables/entities:
 - Confirm deployment uses free tier only.
 - Verify mobile and desktop.
 - Test fresh clone setup.
-- Test empty `.env.local` zero-dollar mode.
+- Test empty `.env.local` free demo mode.
 - Add `.env.example` completeness.
 - Run build and audit.
 - Finalize README and demo video.

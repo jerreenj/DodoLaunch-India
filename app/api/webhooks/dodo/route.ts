@@ -18,6 +18,6 @@ export async function POST(request: Request) {
     message:
       signatureStatus === "verified"
         ? "Webhook signature verified and normalized into the settlement ledger."
-        : "Demo webhook accepted in zero-dollar mode and normalized into the settlement ledger.",
+        : "Demo webhook accepted in free demo mode and normalized into the settlement ledger.",
   });
 }

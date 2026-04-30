@@ -26,7 +26,7 @@ export default function Home() {
   const [state, setState] = useState<DemoState>(initialDemoState);
   const [selectedSettlementId, setSelectedSettlementId] = useState(initialDemoState.settlementEntries[0].id);
   const [busyAction, setBusyAction] = useState<string | null>(null);
-  const [message, setMessage] = useState("Zero-dollar mode is ready. No secrets or paid services required.");
+  const [message, setMessage] = useState("Free demo path is ready. No secrets or paid services required.");
   const [x402Preview, setX402Preview] = useState<string>("HTTP 402 preview is waiting.");
 
   useEffect(() => {
@@ -143,7 +143,7 @@ export default function Home() {
   function resetDemo() {
     setState(initialDemoState);
     setSelectedSettlementId(initialDemoState.settlementEntries[0].id);
-    setMessage("Demo reset. Zero-dollar mode is ready.");
+    setMessage("Demo reset. Free demo path is ready.");
     setX402Preview("HTTP 402 preview is waiting.");
   }
 
@@ -152,14 +152,14 @@ export default function Home() {
       <section className="appHero">
         <nav className="topbar">
           <strong>DodoSettle India</strong>
-          <span>Zero-dollar Frontier build</span>
+          <span>Revenue-to-payouts OS</span>
         </nav>
         <div className="heroLayout">
           <div>
             <p className="eyebrow">Dodo revenue to Solana settlement</p>
             <h1>Global SaaS revenue in. Programmable stablecoin payouts out.</h1>
             <p className="lead">
-              A no-paid-services operating dashboard for Indian SaaS and AI founders:
+              An operating dashboard for Indian SaaS and AI founders:
               Dodo checkout events become settlement ledger entries, payout rules become
               Solana devnet batches, and x402 agent payments join the same flow.
             </p>
@@ -180,7 +180,7 @@ export default function Home() {
             <p className="statusLine">{message}</p>
           </div>
           <aside className="zeroPanel">
-            <p className="eyebrow">Zero-dollar architecture</p>
+            <p className="eyebrow">Free build path</p>
             {zeroDollarStack.map((item) => (
               <div className="checkRow" key={item}>
                 <span>0</span>
@@ -205,7 +205,7 @@ export default function Home() {
           <strong>{latestBatch?.mode ?? "simulate"}</strong>
         </div>
         <div className="metric">
-          <span>Spend required</span>
+          <span>Build cost</span>
           <strong>$0</strong>
         </div>
       </section>
@@ -338,4 +338,3 @@ export default function Home() {
     </main>
   );
 }
-
