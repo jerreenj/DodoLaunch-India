@@ -30,6 +30,8 @@ The first prototype focuses on a simple workflow:
 - Demo analytics comparing wire fees/time against Solana settlement
 - Vercel deployment with environment-based demo mode
 
+See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
+
 ## Tech Stack
 
 - Next.js App Router
@@ -61,4 +63,3 @@ cp .env.example .env.local
 - Dodo API reference: https://docs.dodopayments.com/api-reference/introduction
 - Solana docs: https://solana.com/docs
 - Frontier Hackathon: https://www.colosseum.org/
-
