@@ -1,0 +1,28 @@
+{
+  "name": "solana-dodo-india",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Stablecoin settlement dashboard for Indian SaaS and AI businesses using Dodo Payments and Solana.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest"
+  }
+}
