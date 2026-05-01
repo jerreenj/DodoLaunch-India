@@ -85,11 +85,10 @@ export type PayoutBatch = {
   sourceSettlementId: string;
   total: Money;
   tokenMint: string;
-  feeEstimateUsd: number;
-  bankWireEstimateUsd: number;
-  eta: "seconds";
-  signatures: string[];
-  explorerUrls: string[];
+  executionStatus: "preview" | "broadcasted";
+  costStatus: "not-broadcast" | "devnet-paid";
+  previewIds: string[];
+  chainProofUrls: string[];
   lines: PayoutLine[];
   createdAt: string;
   zeroDollar: true;

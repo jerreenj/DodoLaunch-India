@@ -4,7 +4,7 @@ Open-source hackathon project for the **Payments Track | Superteam India x Dodo 
 
 **DodoLaunch India helps Indian AI and SaaS builders launch paid products with Dodo Payments, then split revenue to founders, affiliates, vendors, agents, and the platform through Solana-ready settlement batches.**
 
-The build path costs **$0** by using free test/demo tooling, devnet/simulation, browser state, GitHub, and Vercel free tier. The product itself is designed to create real revenue after launch.
+The build path costs **$0** by using free test/demo tooling, devnet/payout preview mode, browser state, GitHub, and Vercel free tier. The product itself is designed to create real revenue after launch.
 
 ## Product
 
@@ -17,7 +17,7 @@ The first prototype focuses on this workflow:
 1. A founder launches a paid AI/SaaS product using a Dodo checkout.
 2. Dodo sale webhooks update the revenue ledger.
 3. Split rules calculate founder revenue, affiliate commissions, vendor/API costs, agent/runtime fees, and the DodoLaunch platform fee.
-4. The app prepares Solana stablecoin settlement batches and proof links for those splits.
+4. The app prepares Solana stablecoin settlement previews for those splits; explorer links should only be shown after real devnet broadcast.
 5. x402 demonstrates paid API access for agentic buyers.
 
 ## Why This Is Useful
@@ -35,7 +35,7 @@ The first prototype focuses on this workflow:
 - Dodo sale webhook route that normalizes events into a revenue ledger.
 - Revenue split model for founder, affiliate, vendor, agent/runtime, and platform fee.
 - Browser-generated CSV export for revenue split reports.
-- Solana devnet/simulate settlement batch builder with proof links.
+- Solana devnet/simulate settlement batch preview with no fake explorer links.
 - x402-style HTTP 402 demo for paid agent/API access.
 - First-time user guide inside the app.
 - Default **Try without wallet** mode for early users.
@@ -52,7 +52,7 @@ See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
 - Next.js App Router
 - TypeScript
 - Dodo Payments TypeScript SDK
-- Solana devnet / simulation
+- Solana devnet / payout preview mode
 - x402-style HTTP 402 demo route
 - Vercel free-tier hosting
 
@@ -64,7 +64,7 @@ The hackathon version runs without spending any money:
 - No mainnet SOL, USDC, or paid RPC is used.
 - No hosted database is required; demo state is stored in the browser.
 - Optional real test credentials live only in `.env.local`.
-- The default settlement path is Solana simulation/devnet proof links.
+- The default settlement path is Solana payout preview mode; no chain proof is claimed until a real devnet transaction is broadcast.
 
 ## Local Development
 
@@ -93,6 +93,13 @@ Leaving the values blank is valid and keeps the app in free demo mode.
 4. Click **Run x402 API Sale** to show paid API access for agentic buyers.
 5. Edit the product details in **Founder workspace** and export the split report CSV.
 6. Keep **Try without wallet** selected for normal testers, or use **Wallet tester** for devnet setup instructions.
+
+## Reality Check
+
+- Live today: product setup, Dodo demo/test checkout route, ledger, split CSV, and x402-style HTTP 402 flow.
+- Real when configured: Dodo test checkout uses `DODO_PAYMENTS_API_KEY` and `DODO_PRODUCT_ID`.
+- Preview only: Solana settlement does not claim a broadcast transaction until a real devnet signature exists.
+- Not claimed: mainnet, real funds, real payment volume, paid infrastructure, or production custody.
 
 ## Pilot Rollout
 

@@ -19,7 +19,7 @@ This is stronger than a generic payout dashboard because it creates revenue:
 The product can generate real revenue later, but Jerreen should spend **$0 building and demoing it**.
 
 - Default Dodo path is demo mode; free Dodo test credentials are optional.
-- Default Solana path is simulation with devnet-style proof links; devnet tokens are optional.
+- Default Solana path is payout preview mode; real devnet proof links require an actual devnet broadcast.
 - No mainnet transactions during the hackathon build.
 - No paid RPC.
 - No hosted database bill.
@@ -52,7 +52,7 @@ The demo should feel like launching a real paid product.
    - 10% data/API vendor
    - 5% agent runtime provider
    - 5% DodoLaunch platform fee
-6. Solana devnet/simulation prepares settlement proofs for every split.
+6. Solana devnet/payout preview prepares every split; real explorer proof is only shown after devnet broadcast.
 7. x402 demo shows an agent buying paid API access and joining the same revenue ledger.
 8. Judges see a product that can make money for founders, Dodo, and us.
 
@@ -67,7 +67,7 @@ The demo should feel like launching a real paid product.
 - Revenue ledger.
 - Split model with founder, affiliate, vendor, agent/runtime, and platform fee.
 - CSV export for revenue split report.
-- Solana settlement batch preview with proof links.
+- Solana settlement batch preview with no fake explorer links.
 - x402-style paid API endpoint demo.
 - README with free build path and revenue model.
 - Demo script for a 2-minute judging walkthrough.
@@ -123,7 +123,7 @@ Core entities:
 
 - Rename visible product to DodoLaunch India.
 - Make dashboard tell the launchpad story.
-- Show paid product, Dodo sale event, revenue ledger, split model, platform fee, and Solana proof.
+- Show paid product, Dodo sale event, revenue ledger, split model, platform fee, and Solana payout preview.
 - Keep free build path in docs, but not as the product pitch.
 - Verify app works with empty `.env.local`.
 

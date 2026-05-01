@@ -544,6 +544,7 @@ h1 {
 .ledgerItem,
 .recipientRow,
 .payoutRows a,
+.payoutRows div,
 .codeLine {
   display: grid;
   grid-template-columns: 82px 1fr auto;
@@ -601,7 +602,8 @@ h1 {
   font-size: 1.12rem;
 }
 
-.payoutRows a {
+.payoutRows a,
+.payoutRows div {
   grid-template-columns: 1fr auto;
 }
 

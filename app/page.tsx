@@ -38,6 +38,13 @@ const devnetSteps = [
   "Devnet SOL has no real value and cannot be moved to mainnet.",
 ];
 
+const realityChecks = [
+  "Live today: no-wallet product setup, Dodo demo/test checkout flow, ledger, split CSV, and x402-style 402 flow.",
+  "Real when configured: Dodo test checkout uses DODO_PAYMENTS_API_KEY and DODO_PRODUCT_ID.",
+  "Not claimed as real yet: Solana settlement is a payout preview until an actual devnet transaction is broadcast.",
+  "No public claim uses mainnet, real funds, real payment volume, or paid infrastructure.",
+];
+
 export default function Home() {
   const [state, setState] = useState<DemoState>(initialDemoState);
   const [selectedSettlementId, setSelectedSettlementId] = useState(initialDemoState.settlementEntries[0].id);
@@ -397,6 +404,21 @@ export default function Home() {
           </a>
         </div>
 
+        <div className="panel guidePanel">
+          <div>
+            <p className="eyebrow">Reality check</p>
+            <h2>What is live vs preview</h2>
+          </div>
+          <div className="guideGrid">
+            {realityChecks.map((item, index) => (
+              <div className="guideStep" key={item}>
+                <span>{index + 1}</span>
+                <strong>{item}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="panel setupPanel">
           <div className="panelHeader">
             <div>
@@ -533,26 +555,28 @@ export default function Home() {
                   <strong>{formatMoney(latestBatch.total.amount, latestBatch.total.currency)}</strong>
                 </div>
                 <div>
-                  <span>Estimated fee</span>
-                  <strong>${latestBatch.feeEstimateUsd.toFixed(4)}</strong>
+                  <span>Chain status</span>
+                  <strong>{latestBatch.executionStatus}</strong>
                 </div>
                 <div>
-                  <span>Manual ops avoided</span>
-                  <strong>${latestBatch.bankWireEstimateUsd}</strong>
+                  <span>Cost status</span>
+                  <strong>{latestBatch.costStatus}</strong>
                 </div>
               </div>
               <div className="payoutRows">
                 {latestBatch.lines.map((line, index) => (
-                  <a href={latestBatch.explorerUrls[index]} target="_blank" rel="noreferrer" key={line.id}>
+                  <div key={line.id}>
                     <span>{line.name}</span>
-                    <strong>{formatMoney(line.amount.amount, line.amount.currency)}</strong>
-                  </a>
+                    <strong>
+                      {formatMoney(line.amount.amount, line.amount.currency)} | preview {latestBatch.previewIds[index]}
+                    </strong>
+                  </div>
                 ))}
               </div>
             </>
           ) : (
             <p className="emptyState">
-              Build a revenue split to generate deterministic devnet-style signatures and proof links.
+              Build a revenue split to generate a payout preview. Explorer links appear only after real devnet broadcast.
             </p>
           )}
         </div>

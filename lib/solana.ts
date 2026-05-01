@@ -21,7 +21,7 @@ export function createPayoutBatch(
     },
     status: "ready" as const,
   }));
-  const signatures = lines.map((line) => signature(`${settlement.id}:${line.id}:${mode}`));
+  const previewIds = lines.map((line) => signature(`${settlement.id}:${line.id}:${mode}`).slice(0, 24));
 
   return {
     id: `batch_${signature(settlement.id).slice(0, 12)}`,
@@ -33,14 +33,12 @@ export function createPayoutBatch(
       currency: settlement.amount.currency,
     },
     tokenMint: DEVNET_USDC_MINT,
-    feeEstimateUsd: mode === "devnet" ? 0.0005 : 0,
-    bankWireEstimateUsd: lines.length * 25,
-    eta: "seconds",
-    signatures,
-    explorerUrls: signatures.map((sig) => `https://explorer.solana.com/tx/${sig}?cluster=devnet`),
+    executionStatus: "preview",
+    costStatus: "not-broadcast",
+    previewIds,
+    chainProofUrls: [],
     lines,
     createdAt: new Date().toISOString(),
     zeroDollar: true,
   };
 }
-
