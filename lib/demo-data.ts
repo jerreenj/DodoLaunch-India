@@ -3,7 +3,7 @@ import type { DemoState, ProductConfig, Recipient, SettlementEntry } from "./typ
 export const merchant = {
   name: "Madras MicroApps",
   location: "Chennai, India",
-  product: "SupportAgent Pro credit pack",
+  product: "Support Agent Pro credit pack",
   customer: "OrbitWorks Pte Ltd",
   amount: 1280,
   currency: "USDG" as const,

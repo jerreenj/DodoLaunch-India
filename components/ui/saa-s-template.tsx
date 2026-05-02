@@ -492,7 +492,7 @@ export default function Component() {
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
               <Label>Workspace health</Label>
-              <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-4xl">Payments in. Splits out.</h2>
+              <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-4xl">Payments In, Splits Out</h2>
             </div>
             <span className="grid size-11 place-items-center rounded-lg bg-lime text-ink">
               <Zap className="size-5" />
@@ -503,8 +503,8 @@ export default function Component() {
             {[
               ["Revenue tracked", formatMoney(totalRevenue)],
               ["Dodo events", String(state.dodoEvents.length)],
-              ["Split rules", `${recipients.reduce((sum, item) => sum + item.splitBps, 0) / 100}% routed`],
-              ["Settlement", latestBatch?.executionStatus ?? "ready"],
+              ["Split rules", `${recipients.reduce((sum, item) => sum + item.splitBps, 0) / 100}% Routed`],
+              ["Settlement", latestBatch?.executionStatus === "preview" ? "Ready" : "Broadcasted"],
             ].map(([label, value]) => (
               <div className="rounded-lg border border-white/10 bg-black/24 p-4" key={label}>
                 <Label>{label}</Label>
@@ -783,7 +783,9 @@ export default function Component() {
                   <div className="mb-5 flex items-start justify-between gap-4">
                     <div>
                       <Label>Batch status</Label>
-                      <h3 className="mt-2 text-3xl font-semibold">{latestBatch?.executionStatus ?? "Ready"}</h3>
+                      <h3 className="mt-2 text-3xl font-semibold">
+                        {latestBatch?.executionStatus === "broadcasted" ? "Broadcasted" : "Ready"}
+                      </h3>
                     </div>
                     <StatusPill tone="blue">{latestBatch?.network ?? "devnet"}</StatusPill>
                   </div>
