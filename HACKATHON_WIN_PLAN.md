@@ -42,7 +42,7 @@ Secondary users:
 
 The demo should feel like launching a real paid product.
 
-1. Founder creates a paid product: **Support Agent Pro credit pack**.
+1. Founder creates a paid product: **SupportAgent Pro credit pack**.
 2. DodoLaunch creates a Dodo checkout or demo checkout.
 3. A Dodo sale webhook marks the product as paid.
 4. The revenue ledger records the sale.

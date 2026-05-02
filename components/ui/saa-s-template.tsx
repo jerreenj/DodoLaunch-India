@@ -398,6 +398,7 @@ export default function Component() {
   }
 
   const activeViewMeta = workspaceViews.find((view) => view.id === activeView) ?? workspaceViews[0];
+  const heroProductName = productConfig.productName.replace("SupportAgent", "Support Agent");
 
   return (
     <main className="min-h-screen bg-[#050705] text-white">
@@ -518,7 +519,7 @@ export default function Component() {
               <Label>Active product</Label>
               <StatusPill tone="lime">{mode === "trial" ? "No wallet" : "Wallet tester"}</StatusPill>
             </div>
-            <strong className="block text-xl">{productConfig.productName}</strong>
+            <strong className="block text-xl">{heroProductName}</strong>
             <p className="mt-2 text-sm leading-6 text-white/55">{productConfig.launchNote}</p>
           </div>
         </ShellCard>
