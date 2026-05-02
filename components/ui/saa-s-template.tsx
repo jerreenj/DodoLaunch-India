@@ -504,7 +504,7 @@ export default function Component() {
               ["Revenue tracked", formatMoney(totalRevenue)],
               ["Dodo events", String(state.dodoEvents.length)],
               ["Split rules", `${recipients.reduce((sum, item) => sum + item.splitBps, 0) / 100}% Routed`],
-              ["Settlement", latestBatch?.executionStatus === "preview" ? "Ready" : "Broadcasted"],
+              ["Settlement", latestBatch?.executionStatus === "broadcasted" ? "Broadcasted" : "Ready"],
             ].map(([label, value]) => (
               <div className="rounded-lg border border-white/10 bg-black/24 p-4" key={label}>
                 <Label>{label}</Label>
