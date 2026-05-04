@@ -1,10 +1,39 @@
+<div align="center">
+
 # DodoLaunch India
 
-Open-source hackathon project for the **Payments Track | Superteam India x Dodo Payments** at Solana Frontier.
+### Launch paid AI products with Dodo. Route revenue splits with Solana-ready settlement.
 
-**DodoLaunch India helps Indian AI and SaaS builders launch paid products with Dodo Payments, then split revenue to founders, affiliates, vendors, agents, and the platform through Solana-ready settlement batches.**
+<p>
+  <a href="https://dodolaunch-india.vercel.app"><img alt="Live app" src="https://img.shields.io/badge/LIVE_APP-DODOLAUNCH-111111?style=for-the-badge&logo=vercel&logoColor=white"></a>
+  <a href="https://github.com/jerreenj/DodoLaunch-India"><img alt="GitHub" src="https://img.shields.io/badge/GITHUB-DodoLaunch--India-24292f?style=for-the-badge&logo=github&logoColor=white"></a>
+  <a href="https://docs.dodopayments.com/"><img alt="Dodo Payments" src="https://img.shields.io/badge/DODO-PAYMENTS-7c3aed?style=for-the-badge"></a>
+</p>
 
-The build path costs **$0** by using free test/demo tooling, devnet/payout preview mode, browser state, GitHub, and Vercel free tier. The product itself is designed to create real revenue after launch.
+<p>
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-App_Router-black?style=flat-square&logo=nextdotjs">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white">
+  <img alt="Tailwind" src="https://img.shields.io/badge/Tailwind-v3-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white">
+  <img alt="Dodo Payments" src="https://img.shields.io/badge/Dodo-test%2Fdemo-f97316?style=flat-square">
+  <img alt="Solana" src="https://img.shields.io/badge/Solana-devnet-14f195?style=flat-square&logo=solana&logoColor=111111">
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-white?style=flat-square">
+</p>
+
+</div>
+
+---
+
+**DodoLaunch India** is an open-source hackathon product for the **Payments Track | Superteam India x Dodo Payments** at Solana Frontier.
+
+It helps Indian AI and SaaS builders package a paid product, launch checkout with Dodo Payments, track every sale, calculate revenue splits, and prepare Solana-ready settlement batches for founders, affiliates, vendors, agents, and platform fees.
+
+The hackathon build path costs **$0** by using Dodo test/demo mode, Solana devnet or payout preview mode, browser state, GitHub, and Vercel free tier. The product itself is designed to create real revenue after launch.
+
+## Live Links
+
+- **Live app:** https://dodolaunch-india.vercel.app
+- **GitHub repo:** https://github.com/jerreenj/DodoLaunch-India
+- **Hackathon track:** Payments Track | Superteam India x Dodo Payments
 
 ## Product
 
