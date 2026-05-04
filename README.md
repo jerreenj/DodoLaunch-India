@@ -81,6 +81,7 @@ The first prototype focuses on this workflow:
 - x402-style HTTP 402 demo for paid agent/API access.
 - First-time user guide inside the app.
 - Default **Try without wallet** mode for early users.
+- Real Phantom/Solana browser wallet connect for devnet testers.
 - Wallet tester instructions for getting devnet SOL from the official faucet.
 - GitHub Issues feedback CTA before scaling from 20 to 200 users.
 - Clear devnet-only/no-mainnet/no-paid-services labels.

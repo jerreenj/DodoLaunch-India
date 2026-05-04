@@ -14,6 +14,7 @@ Use this before sending the Superteam Earn and Colosseum submission.
 
 - First-time user can understand what DodoLaunch does from the first screen.
 - **Try without wallet** works for normal testers.
+- **Connect wallet** detects Phantom/Solana wallet providers for devnet testers.
 - **Create checkout** creates a Dodo checkout event.
 - Sale webhook routes revenue into the ledger.
 - Revenue split totals match the original sale amount.
@@ -42,6 +43,7 @@ Date: 2026-05-04
 | Dodo checkout route | Passed in demo mode |
 | Dodo webhook route | Passed and returned `received: true` |
 | Solana payout route | Passed in `simulate` mode |
+| Wallet connect UI | Added Phantom/Solana injected wallet connect path |
 | x402 unpaid route | Passed with `402` |
 | x402 paid route | Passed and returned an event |
 

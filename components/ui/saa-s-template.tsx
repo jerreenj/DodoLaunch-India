@@ -31,6 +31,20 @@ import type {
 
 type WorkspaceView = "launch" | "checkout" | "ledger" | "settlement" | "agent";
 
+type SolanaProvider = {
+  isPhantom?: boolean;
+  publicKey?: { toString: () => string };
+  connect: (options?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey: { toString: () => string } }>;
+  disconnect?: () => Promise<void>;
+};
+
+declare global {
+  interface Window {
+    phantom?: { solana?: SolanaProvider };
+    solana?: SolanaProvider;
+  }
+}
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "secondary" | "ghost" | "gradient";
   size?: "default" | "sm" | "lg";
@@ -187,6 +201,27 @@ function StatusPill({
   return <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase ${tones[tone]}`}>{children}</span>;
 }
 
+function getSolanaProvider() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const phantomProvider = window.phantom?.solana;
+  if (phantomProvider?.isPhantom) {
+    return phantomProvider;
+  }
+
+  if (window.solana?.isPhantom) {
+    return window.solana;
+  }
+
+  return null;
+}
+
+function shortWallet(address: string) {
+  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+}
+
 export default function Component() {
   const [state, setState] = React.useState<DemoState>(initialDemoState);
   const [selectedSettlementId, setSelectedSettlementId] = React.useState(initialDemoState.settlementEntries[0].id);
@@ -197,6 +232,9 @@ export default function Component() {
   const [busyAction, setBusyAction] = React.useState<string | null>(null);
   const [message, setMessage] = React.useState("No wallet trial is ready. Use Dodo test credentials later when available.");
   const [x402Preview, setX402Preview] = React.useState("Agent data is protected until a payment proof is attached.");
+  const [walletAddress, setWalletAddress] = React.useState("");
+  const [walletError, setWalletError] = React.useState("");
+  const [walletConnecting, setWalletConnecting] = React.useState(false);
 
   React.useEffect(() => {
     try {
@@ -225,6 +263,23 @@ export default function Component() {
   React.useEffect(() => {
     window.localStorage.setItem(productStorageKey, JSON.stringify(productConfig));
   }, [productConfig]);
+
+  React.useEffect(() => {
+    const provider = getSolanaProvider();
+    if (!provider) {
+      return;
+    }
+
+    provider
+      .connect({ onlyIfTrusted: true })
+      .then((response) => {
+        setWalletAddress(response.publicKey.toString());
+        setMode("wallet");
+      })
+      .catch(() => {
+        setWalletAddress("");
+      });
+  }, []);
 
   const selectedSettlement =
     state.settlementEntries.find((entry) => entry.id === selectedSettlementId) ?? state.settlementEntries[0];
@@ -339,6 +394,42 @@ export default function Component() {
     });
   }
 
+  async function connectWallet() {
+    setMode("wallet");
+    setActiveView("settlement");
+    setWalletError("");
+
+    const provider = getSolanaProvider();
+    if (!provider) {
+      const error = "No Solana wallet detected. Install Phantom, then switch it to devnet for testing.";
+      setWalletError(error);
+      setMessage(error);
+      return;
+    }
+
+    setWalletConnecting(true);
+    try {
+      const response = await provider.connect();
+      const address = response.publicKey.toString();
+      setWalletAddress(address);
+      setMessage(`Wallet connected: ${shortWallet(address)}. Use devnet only for settlement testing.`);
+    } catch {
+      const error = "Wallet connection was cancelled or blocked by the browser.";
+      setWalletError(error);
+      setMessage(error);
+    } finally {
+      setWalletConnecting(false);
+    }
+  }
+
+  async function disconnectWallet() {
+    const provider = getSolanaProvider();
+    await provider?.disconnect?.();
+    setWalletAddress("");
+    setWalletError("");
+    setMessage("Wallet disconnected. No wallet trial is still available.");
+  }
+
   function resetWorkspace() {
     setState(initialDemoState);
     setSelectedSettlementId(initialDemoState.settlementEntries[0].id);
@@ -430,7 +521,9 @@ export default function Component() {
           </div>
 
           <div className="flex items-center gap-2">
-            <StatusPill tone={mode === "trial" ? "lime" : "blue"}>{mode === "trial" ? "No wallet trial" : "Devnet wallet"}</StatusPill>
+            <StatusPill tone={walletAddress || mode === "wallet" ? "blue" : "lime"}>
+              {walletAddress ? shortWallet(walletAddress) : mode === "trial" ? "No wallet trial" : "Connect wallet"}
+            </StatusPill>
             <Button
               type="button"
               variant="ghost"
@@ -485,6 +578,10 @@ export default function Component() {
             <Button type="button" variant="secondary" size="lg" onClick={createCheckout} disabled={busyAction !== null}>
               {busyAction === "checkout" ? "Creating..." : "Create checkout"}
             </Button>
+            <Button type="button" variant="secondary" size="lg" onClick={connectWallet} disabled={walletConnecting}>
+              <Wallet className="size-4" />
+              {walletConnecting ? "Connecting..." : walletAddress ? shortWallet(walletAddress) : "Connect wallet"}
+            </Button>
           </div>
           <p className="mt-5 max-w-xl text-sm font-medium text-white/48">{message}</p>
         </div>
@@ -517,7 +614,9 @@ export default function Component() {
           <div className="mt-4 rounded-lg border border-white/10 bg-lime/[0.08] p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
               <Label>Active product</Label>
-              <StatusPill tone="lime">{mode === "trial" ? "No wallet" : "Wallet tester"}</StatusPill>
+              <StatusPill tone={walletAddress ? "blue" : "lime"}>
+                {walletAddress ? "Wallet connected" : mode === "trial" ? "No wallet" : "Wallet tester"}
+              </StatusPill>
             </div>
             <strong className="block text-xl">{heroProductName}</strong>
             <p className="mt-2 text-sm leading-6 text-white/55">{productConfig.launchNote}</p>
@@ -759,9 +858,25 @@ export default function Component() {
                     <Button type="button" variant="secondary" onClick={() => setMode(mode === "trial" ? "wallet" : "trial")}>
                       {mode === "trial" ? "Show wallet tester path" : "Use no wallet trial"}
                     </Button>
+                    <Button type="button" variant={walletAddress ? "secondary" : "default"} onClick={connectWallet} disabled={walletConnecting}>
+                      <Wallet className="size-4" />
+                      {walletConnecting ? "Connecting wallet..." : walletAddress ? `Connected ${shortWallet(walletAddress)}` : "Connect Phantom wallet"}
+                    </Button>
                   </div>
                   {mode === "wallet" ? (
                     <div className="mt-5 grid gap-3">
+                      <div className="rounded-lg border border-white/10 bg-black/24 p-4">
+                        <Label>Wallet status</Label>
+                        <strong className="mt-2 block break-all text-white">
+                          {walletAddress || "No wallet connected yet"}
+                        </strong>
+                        {walletError ? <p className="mt-2 text-sm leading-6 text-red-200">{walletError}</p> : null}
+                        {walletAddress ? (
+                          <Button type="button" variant="ghost" size="sm" className="mt-3" onClick={disconnectWallet}>
+                            Disconnect wallet
+                          </Button>
+                        ) : null}
+                      </div>
                       {devnetSteps.map((step) => (
                         <div className="flex gap-3 rounded-lg border border-white/10 bg-black/24 p-3" key={step}>
                           <Check className="mt-0.5 size-4 shrink-0 text-lime" />
