@@ -35,6 +35,18 @@ The hackathon build path costs **$0** by using Dodo test/demo mode, Solana devne
 - **GitHub repo:** https://github.com/jerreenj/DodoLaunch-India
 - **Hackathon track:** Payments Track | Superteam India x Dodo Payments
 
+## Submission Status
+
+| Area | Status |
+| --- | --- |
+| App | Live on Vercel |
+| Checkout | Dodo test mode when keys exist, built-in demo mode when keys are blank |
+| Ledger | Working browser-local revenue ledger |
+| Splits | Founder, affiliate, vendor, agent/runtime, and platform fee split model |
+| Settlement | Solana devnet-ready preview; no fake mainnet or fake explorer proof |
+| x402 | Working HTTP 402 demo route for paid agent/API access |
+| Cost to build | No paid hosting, no paid database, no paid RPC, no paid AI API |
+
 ## Product
 
 DodoLaunch is a paid-product launchpad for Indian micro-SaaS and AI builders.
@@ -75,6 +87,18 @@ The first prototype focuses on this workflow:
 - Vercel free-tier deployment path with no required secrets.
 
 See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
+
+## Judge Demo Script
+
+1. Open the live app.
+2. Keep **Try without wallet** selected.
+3. Click **Create checkout** to generate a Dodo checkout event.
+4. Replay the sale webhook to route the paid event into the ledger.
+5. Build the revenue split to see the settlement batch and platform fee.
+6. Run the x402 agent/API sale to show autonomous paid access.
+7. Export the CSV split report.
+
+The product does not claim real mainnet volume during judging. It shows a real working product flow with honest Dodo test/demo and Solana devnet-ready settlement boundaries.
 
 ## Tech Stack
 
