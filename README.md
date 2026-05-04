@@ -2,7 +2,7 @@
 
 # DodoLaunch India
 
-### Launch paid AI products with Dodo. Route revenue splits with Solana-ready settlement.
+### Launch paid AI products with Dodo. Route revenue splits with mainnet-ready Solana settlement.
 
 <p>
   <a href="https://dodolaunch-india.vercel.app"><img alt="Live app" src="https://img.shields.io/badge/LIVE_APP-DODOLAUNCH-111111?style=for-the-badge&logo=vercel&logoColor=white"></a>
@@ -14,8 +14,8 @@
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-App_Router-black?style=flat-square&logo=nextdotjs">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white">
   <img alt="Tailwind" src="https://img.shields.io/badge/Tailwind-v3-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white">
-  <img alt="Dodo Payments" src="https://img.shields.io/badge/Dodo-test%2Fdemo-f97316?style=flat-square">
-  <img alt="Solana" src="https://img.shields.io/badge/Solana-devnet-14f195?style=flat-square&logo=solana&logoColor=111111">
+  <img alt="Dodo Payments" src="https://img.shields.io/badge/Dodo-live%2Ftest-f97316?style=flat-square">
+  <img alt="Solana" src="https://img.shields.io/badge/Solana-mainnet--ready-14f195?style=flat-square&logo=solana&logoColor=111111">
   <img alt="License" src="https://img.shields.io/badge/License-MIT-white?style=flat-square">
 </p>
 
@@ -25,9 +25,9 @@
 
 **DodoLaunch India** is an open-source hackathon product for the **Payments Track | Superteam India x Dodo Payments** at Solana Frontier.
 
-It helps Indian AI and SaaS builders package a paid product, launch checkout with Dodo Payments, track every sale, calculate revenue splits, and prepare Solana-ready settlement batches for founders, affiliates, vendors, agents, and platform fees.
+It helps Indian AI and SaaS builders package a paid product, launch checkout with Dodo Payments, track every sale, calculate revenue splits, and prepare mainnet-ready Solana settlement batches for founders, affiliates, vendors, agents, and platform fees.
 
-The hackathon build path costs **$0** by using Dodo test/demo mode, Solana devnet or payout preview mode, browser state, GitHub, and Vercel free tier. The product itself is designed to create real revenue after launch.
+The product runs without secrets in sandbox mode, and becomes production-ready when Dodo live credentials and a wallet-approved mainnet settlement path are configured.
 
 ## Live Links
 
@@ -41,11 +41,11 @@ The hackathon build path costs **$0** by using Dodo test/demo mode, Solana devne
 | Area | Status |
 | --- | --- |
 | App | Live on Vercel |
-| Checkout | Dodo test mode when keys exist, built-in demo mode when keys are blank |
-| Webhooks | Demo mode accepts local test events; production secret mode rejects missing or invalid signatures |
+| Checkout | Dodo live mode when live keys exist, test mode for staging, sandbox mode when keys are blank |
+| Webhooks | Sandbox mode accepts local test events; production secret mode rejects missing or invalid signatures |
 | Ledger | Working browser-local revenue ledger |
 | Splits | Founder, affiliate, vendor, agent/runtime, and platform fee split model |
-| Settlement | Solana simulate mode by default; connected-wallet path prepares devnet batches |
+| Settlement | Solana simulate mode without a wallet; connected-wallet path prepares mainnet batches |
 | x402 | Working HTTP 402 demo route for paid agent/API access |
 | Cost to build | No paid hosting, no paid database, no paid RPC, no paid AI API |
 
@@ -60,7 +60,7 @@ The first prototype focuses on this workflow:
 1. A founder launches a paid AI/SaaS product using a Dodo checkout.
 2. Dodo sale webhooks update the revenue ledger.
 3. Split rules calculate founder revenue, affiliate commissions, vendor/API costs, agent/runtime fees, and the DodoLaunch platform fee.
-4. The app prepares Solana stablecoin settlement previews for those splits; explorer links should only be shown after real devnet broadcast.
+4. The app prepares Solana stablecoin settlement previews for those splits; explorer links should only be shown after real mainnet broadcast.
 5. x402 demonstrates paid API access for agentic buyers.
 
 ## Why This Is Useful
@@ -78,14 +78,14 @@ The first prototype focuses on this workflow:
 - Dodo sale webhook route that normalizes events into a revenue ledger.
 - Revenue split model for founder, affiliate, vendor, agent/runtime, and platform fee.
 - Browser-generated CSV export for revenue split reports.
-- Solana simulate/devnet settlement batch preview with no fake explorer links.
+- Solana simulate/mainnet settlement batch preview with no fake explorer links.
 - x402-style HTTP 402 demo for paid agent/API access.
 - First-time user guide inside the app.
 - Default **Try without wallet** mode for early users.
-- Real Phantom/Solana browser wallet connect for devnet testers.
-- Wallet tester instructions for getting devnet SOL from the official faucet.
+- Real Phantom/Solana browser wallet connect for mainnet settlement operators.
+- Mainnet wallet readiness instructions for SOL fees and USDC payouts.
 - GitHub Issues feedback CTA before scaling from 20 to 200 users.
-- Clear devnet-only/no-mainnet/no-paid-services labels.
+- Clear mainnet-ready labels with no fake broadcast claims.
 - Browser-local demo state with no hosted database.
 - Vercel free-tier deployment path with no required secrets.
 
@@ -102,26 +102,30 @@ Use the final checklist before submission: [SUBMISSION_SWEEP.md](./SUBMISSION_SW
 6. Run the x402 agent/API sale to show autonomous paid access.
 7. Export the CSV split report.
 
-The product does not claim real mainnet volume during judging. It shows a real working product flow with honest Dodo test/demo and Solana devnet-ready settlement boundaries.
+The product does not fake mainnet volume during judging. It shows a working product flow with honest Dodo live/test/sandbox modes and mainnet-ready Solana settlement boundaries.
 
 ## Tech Stack
 
 - Next.js App Router
 - TypeScript
 - Dodo Payments TypeScript SDK
-- Solana devnet / payout preview mode / browser wallet connect
+- Solana mainnet-ready payout preview / browser wallet connect
 - x402-style HTTP 402 demo route
 - Vercel free-tier hosting
 
-## Free Build Path
+## Production Configuration
 
-The hackathon version runs without spending any money:
+The app can be opened without secrets in sandbox mode, then moved to production by configuring live credentials:
 
-- No Dodo credentials are required for demo mode.
-- No mainnet SOL, USDC, or paid RPC is used.
-- No hosted database is required; demo state is stored in the browser.
-- Optional real test credentials live only in `.env.local`.
-- The default settlement path is Solana payout preview mode; connected wallets can prepare devnet batches, and no chain proof is claimed until a real devnet transaction is broadcast.
+- `DODO_PAYMENTS_API_KEY`
+- `DODO_PAYMENTS_ENVIRONMENT=live_mode`
+- `DODO_PAYMENTS_WEBHOOK_SECRET`
+- `DODO_PRODUCT_ID`
+- `DODO_RETURN_URL=https://dodolaunch-india.vercel.app`
+- `NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta`
+- `NEXT_PUBLIC_SOLANA_RPC_URL=https://api.mainnet-beta.solana.com`
+
+No private keys are committed. Mainnet settlement still requires a connected wallet to approve any real transfer.
 
 ## Local Development
 
@@ -140,7 +144,7 @@ Copy `.env.example` to `.env.local` when wiring real integrations.
 cp .env.example .env.local
 ```
 
-Leaving the values blank is valid and keeps the app in free demo mode.
+Leaving Dodo values blank is valid and keeps the app in sandbox mode.
 
 ## Demo Flow
 
@@ -149,14 +153,14 @@ Leaving the values blank is valid and keeps the app in free demo mode.
 3. Click **Build Revenue Split** to generate the Solana settlement batch.
 4. Click **Run x402 API Sale** to show paid API access for agentic buyers.
 5. Edit the product details in **Founder workspace** and export the split report CSV.
-6. Keep **Try without wallet** selected for normal testers, or use **Wallet tester** for devnet setup instructions.
+6. Keep **Try without wallet** selected for normal testers, or connect Phantom for mainnet settlement readiness.
 
 ## Reality Check
 
-- Live today: product setup, Dodo demo/test checkout route, ledger, split CSV, and x402-style HTTP 402 flow.
-- Real when configured: Dodo test checkout uses `DODO_PAYMENTS_API_KEY` and `DODO_PRODUCT_ID`.
-- Preview/devnet-ready: Solana settlement does not claim a broadcast transaction until a real devnet signature exists.
-- Not claimed: mainnet, real funds, real payment volume, paid infrastructure, or production custody.
+- Live today: product setup, Dodo sandbox/test/live checkout route, ledger, split CSV, wallet connect, and x402-style HTTP 402 flow.
+- Real when configured: Dodo live checkout uses `DODO_PAYMENTS_API_KEY`, `DODO_PAYMENTS_ENVIRONMENT=live_mode`, and `DODO_PRODUCT_ID`.
+- Mainnet-ready: Solana settlement prepares mainnet batches for connected wallets.
+- Not claimed: completed mainnet broadcast, real payment volume, or production custody unless a real signature/payment is shown.
 
 ## Pilot Rollout
 

@@ -110,7 +110,7 @@ const workspaceViews: Array<{
   {
     id: "settlement",
     label: "Settlement",
-    description: "Solana devnet readiness",
+    description: "Solana mainnet readiness",
     icon: Wallet,
   },
   {
@@ -121,11 +121,11 @@ const workspaceViews: Array<{
   },
 ];
 
-const devnetSteps = [
-  "Switch your wallet network to Solana Devnet.",
-  "Request test SOL from the official Solana faucet.",
-  "Use devnet only for transaction testing; never mainnet for this build.",
-  "Explorer proof appears only after an actual devnet broadcast exists.",
+const productionWalletSteps = [
+  "Open this app in a wallet-enabled browser with Phantom or another Solana wallet.",
+  "Switch your wallet to Solana Mainnet Beta before production settlement.",
+  "Keep enough SOL for network fees and enough USDC for payouts.",
+  "Explorer proof appears only after a real wallet-approved mainnet broadcast exists.",
 ];
 
 function ShellCard({
@@ -230,7 +230,7 @@ export default function Component() {
   const [activeView, setActiveView] = React.useState<WorkspaceView>("launch");
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [busyAction, setBusyAction] = React.useState<string | null>(null);
-  const [message, setMessage] = React.useState("No wallet trial is ready. Use Dodo test credentials later when available.");
+  const [message, setMessage] = React.useState("Production workspace is ready. Add Dodo live keys when you want real checkout.");
   const [x402Preview, setX402Preview] = React.useState("Agent data is protected until a payment proof is attached.");
   const [walletAddress, setWalletAddress] = React.useState("");
   const [walletError, setWalletError] = React.useState("");
@@ -360,7 +360,7 @@ export default function Component() {
       const response = await fetch("/api/solana/payouts", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ settlement: selectedSettlement, mode: walletAddress ? "devnet" : "simulate" }),
+        body: JSON.stringify({ settlement: selectedSettlement, mode: walletAddress ? "mainnet" : "simulate" }),
       });
       const data = (await response.json()) as { batch: PayoutBatch; message: string };
       setState((current) => ({ ...current, payoutBatches: [data.batch, ...current.payoutBatches] }));
@@ -401,7 +401,7 @@ export default function Component() {
 
     const provider = getSolanaProvider();
     if (!provider) {
-      const error = "No Solana wallet detected. Install Phantom, then switch it to devnet for testing.";
+      const error = "No Solana wallet detected. Install Phantom or open this app in a wallet-enabled browser.";
       setWalletError(error);
       setMessage(error);
       return;
@@ -412,7 +412,7 @@ export default function Component() {
       const response = await provider.connect();
       const address = response.publicKey.toString();
       setWalletAddress(address);
-      setMessage(`Wallet connected: ${shortWallet(address)}. Use devnet only for settlement testing.`);
+      setMessage(`Wallet connected: ${shortWallet(address)}. Mainnet settlement batches can now be prepared for wallet approval.`);
     } catch {
       const error = "Wallet connection was cancelled or blocked by the browser.";
       setWalletError(error);
@@ -433,7 +433,7 @@ export default function Component() {
   function resetWorkspace() {
     setState(initialDemoState);
     setSelectedSettlementId(initialDemoState.settlementEntries[0].id);
-    setMessage("Workspace reset. No wallet trial is ready.");
+    setMessage("Workspace reset. Production workspace is ready.");
     setX402Preview("Agent data is protected until a payment proof is attached.");
     setActiveView("launch");
   }
@@ -561,8 +561,8 @@ export default function Component() {
         <div>
           <div className="mb-6 flex flex-wrap gap-2">
             <StatusPill tone="lime">Dodo Payments</StatusPill>
-            <StatusPill tone="blue">Solana devnet</StatusPill>
-            <StatusPill>No mainnet funds</StatusPill>
+            <StatusPill tone="blue">Solana mainnet</StatusPill>
+            <StatusPill>Wallet approval</StatusPill>
           </div>
           <h1 className="max-w-3xl text-6xl font-semibold leading-[0.92] tracking-normal text-white sm:text-7xl lg:text-8xl">
             DodoLaunch India
@@ -731,7 +731,7 @@ export default function Component() {
                   <Label>Dodo payment rail</Label>
                   <h3 className="mt-2 text-3xl font-semibold">Create a checkout, then record the sale</h3>
                   <p className="mt-3 text-sm leading-6 text-white/54">
-                    This path uses Dodo test credentials when configured. Without keys, the app uses a sandbox adapter so users can still experience the product.
+                    This path uses Dodo live credentials when configured. Without keys, the app uses a sandbox adapter so users can still experience the product.
                   </p>
                   <div className="mt-5 grid gap-3">
                     <Button type="button" variant="gradient" disabled={busyAction !== null} onClick={createCheckout}>
@@ -742,8 +742,8 @@ export default function Component() {
                     </Button>
                   </div>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    <StatusPill tone={latestCheckout?.mode === "test" ? "lime" : "neutral"}>
-                      {latestCheckout?.mode === "test" ? "Dodo test API" : "Sandbox adapter"}
+                    <StatusPill tone={latestCheckout?.mode === "live" ? "lime" : "neutral"}>
+                      {latestCheckout?.mode === "live" ? "Dodo live API" : latestCheckout?.mode === "test" ? "Dodo test API" : "Sandbox adapter"}
                     </StatusPill>
                     <StatusPill>No paid database</StatusPill>
                   </div>
@@ -847,9 +847,9 @@ export default function Component() {
               <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
                 <ShellCard>
                   <Label>Solana settlement</Label>
-                  <h3 className="mt-2 text-3xl font-semibold">Prepare a devnet batch</h3>
+                  <h3 className="mt-2 text-3xl font-semibold">Prepare a mainnet batch</h3>
                   <p className="mt-3 text-sm leading-6 text-white/54">
-                    The product prepares payout lines from verified ledger entries. It does not show chain proof until a real devnet transaction is broadcast.
+                    The product prepares payout lines from verified ledger entries. It does not show chain proof until a real mainnet transaction is wallet-approved and broadcast.
                   </p>
                   <div className="mt-5 grid gap-3">
                     <Button type="button" variant="gradient" disabled={busyAction !== null} onClick={preparePayout}>
@@ -877,7 +877,7 @@ export default function Component() {
                           </Button>
                         ) : null}
                       </div>
-                      {devnetSteps.map((step) => (
+                      {productionWalletSteps.map((step) => (
                         <div className="flex gap-3 rounded-lg border border-white/10 bg-black/24 p-3" key={step}>
                           <Check className="mt-0.5 size-4 shrink-0 text-lime" />
                           <span className="text-sm leading-6 text-white/58">{step}</span>
@@ -885,11 +885,11 @@ export default function Component() {
                       ))}
                       <a
                         className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-frontier px-4 text-sm font-semibold text-white"
-                        href="https://faucet.solana.com/"
+                        href="https://phantom.com/"
                         target="_blank"
                         rel="noreferrer"
                       >
-                        Open Solana faucet <ExternalLink className="size-4" />
+                        Install Phantom <ExternalLink className="size-4" />
                       </a>
                     </div>
                   ) : null}
@@ -903,7 +903,7 @@ export default function Component() {
                         {latestBatch?.executionStatus === "broadcasted" ? "Broadcasted" : "Ready"}
                       </h3>
                     </div>
-                    <StatusPill tone="blue">{latestBatch?.network ?? "devnet"}</StatusPill>
+                    <StatusPill tone="blue">{latestBatch?.network ?? "mainnet-beta"}</StatusPill>
                   </div>
                   {latestBatch ? (
                     <div className="grid gap-3">
@@ -919,7 +919,7 @@ export default function Component() {
                     </div>
                   ) : (
                     <div className="rounded-lg border border-white/10 bg-black/24 p-5 text-sm leading-6 text-white/56">
-                      Select a ledger entry and prepare a batch. The output remains clearly labeled until a devnet broadcast is available.
+                      Select a ledger entry and prepare a batch. The output remains clearly labeled until a wallet-approved mainnet broadcast is available.
                     </div>
                   )}
                 </ShellCard>
@@ -961,7 +961,7 @@ export default function Component() {
 
             <div className="mt-5 flex flex-col justify-between gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-4 sm:flex-row sm:items-center">
               <p className="text-sm leading-6 text-white/52">
-                Product status: Dodo test credentials are optional, Solana is devnet-only, and no paid services are required to use the trial workspace.
+                Product status: Dodo live credentials are supported, Solana settlement is mainnet-ready, and real funds require wallet approval.
               </p>
               <Button type="button" variant="ghost" onClick={resetWorkspace}>
                 <RefreshCw className="size-4" /> Reset workspace
@@ -973,7 +973,7 @@ export default function Component() {
 
       <footer className="border-t border-white/10 px-4 py-8 text-center text-sm text-white/40 sm:px-6">
         <Globe2 className="mx-auto mb-3 size-5 text-lime" />
-        DodoLaunch India runs as a public product workspace for test-mode checkout, revenue routing, and devnet settlement preparation.
+        DodoLaunch India runs as a public product workspace for live checkout configuration, revenue routing, and mainnet settlement preparation.
       </footer>
     </main>
   );

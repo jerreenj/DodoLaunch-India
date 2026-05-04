@@ -13,7 +13,11 @@ function id(prefix: string, seed: string) {
 }
 
 function dodoMode(): DodoMode {
-  return process.env.DODO_PAYMENTS_API_KEY && process.env.DODO_PRODUCT_ID ? "test" : "demo";
+  if (!process.env.DODO_PAYMENTS_API_KEY || !process.env.DODO_PRODUCT_ID) {
+    return "demo";
+  }
+
+  return process.env.DODO_PAYMENTS_ENVIRONMENT === "live_mode" ? "live" : "test";
 }
 
 export async function createDodoCheckout(input: CheckoutInput = {}): Promise<DodoCheckout> {
@@ -24,11 +28,12 @@ export async function createDodoCheckout(input: CheckoutInput = {}): Promise<Dod
   const amount = input.amount ?? merchant.amount;
   const sessionId = id("cks", `${productName}:${customer}:${amount}`);
 
-  if (mode === "test") {
+  if (mode === "test" || mode === "live") {
     const DodoPayments = (await import("dodopayments")).default;
+    const environment = mode === "live" ? "live_mode" : "test_mode";
     const client = new DodoPayments({
       bearerToken: process.env.DODO_PAYMENTS_API_KEY,
-      environment: "test_mode",
+      environment,
     });
     const session = await client.checkoutSessions.create({
       product_cart: [{ product_id: process.env.DODO_PRODUCT_ID as string, quantity: 1 }],
@@ -43,7 +48,7 @@ export async function createDodoCheckout(input: CheckoutInput = {}): Promise<Dod
       customer,
       amount: { amount, currency: merchant.currency },
       createdAt: now,
-      zeroDollar: true,
+      zeroDollar: mode !== "live",
     };
   }
 

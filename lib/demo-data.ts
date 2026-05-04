@@ -65,8 +65,8 @@ export const recipients: Recipient[] = [
 export const zeroDollarStack = [
   "GitHub public repo",
   "Vercel free tier",
-  "Dodo test/demo mode",
-  "Solana devnet/simulation",
+  "Dodo live/test/sandbox mode",
+  "Solana mainnet-ready settlement",
   "Browser/local demo fixtures",
   "No hosted database",
 ];

@@ -3,6 +3,7 @@ import { recipients } from "./demo-data";
 import type { PayoutBatch, SettlementEntry, SolanaMode } from "./types";
 
 const DEVNET_USDC_MINT = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
+const MAINNET_USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
 function signature(seed: string) {
   const chars = crypto.createHash("sha256").update(seed).digest("base64url").replace(/_/g, "x");
@@ -22,23 +23,24 @@ export function createPayoutBatch(
     status: "ready" as const,
   }));
   const previewIds = lines.map((line) => signature(`${settlement.id}:${line.id}:${mode}`).slice(0, 24));
+  const isMainnet = mode === "mainnet";
 
   return {
     id: `batch_${signature(settlement.id).slice(0, 12)}`,
     mode,
-    network: "devnet",
+    network: isMainnet ? "mainnet-beta" : "devnet",
     sourceSettlementId: settlement.id,
     total: {
       amount: Number(lines.reduce((sum, line) => sum + line.amount.amount, 0).toFixed(2)),
       currency: settlement.amount.currency,
     },
-    tokenMint: DEVNET_USDC_MINT,
+    tokenMint: isMainnet ? MAINNET_USDC_MINT : DEVNET_USDC_MINT,
     executionStatus: "preview",
-    costStatus: "not-broadcast",
+    costStatus: isMainnet ? "mainnet-requires-wallet" : "not-broadcast",
     previewIds,
     chainProofUrls: [],
     lines,
     createdAt: new Date().toISOString(),
-    zeroDollar: true,
+    zeroDollar: !isMainnet,
   };
 }

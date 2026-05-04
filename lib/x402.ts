@@ -8,14 +8,14 @@ export function paymentRequiredResponse() {
     accepts: [
       {
         scheme: "exact",
-        network: "solana-devnet",
+        network: "solana-mainnet-beta",
         amount: "2.40",
         currency: "USDG",
         resource: "/api/x402/agent-data",
       },
     ],
-    zeroDollar: true,
-    message: "Demo x402 flow only. No real funds are requested during the free build path.",
+    zeroDollar: false,
+    message: "x402 payment proof required before paid agent data is released.",
   };
 }
 

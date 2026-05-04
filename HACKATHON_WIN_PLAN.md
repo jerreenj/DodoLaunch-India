@@ -14,14 +14,13 @@ This is stronger than a generic payout dashboard because it creates revenue:
 - **Solana matters** because revenue is split programmatically between founder, affiliate, vendor, agent/runtime provider, and platform.
 - **x402 bonus angle** adds paid API access for AI agents and autonomous buyers.
 
-## Free Build Constraint
+## Production Readiness Constraint
 
-The product can generate real revenue later, but Jerreen should spend **$0 building and demoing it**.
+The product should be mainnet-ready for production while still opening safely without secrets.
 
-- Default Dodo path is demo mode; free Dodo test credentials are optional.
-- Default Solana path is payout preview mode; real devnet proof links require an actual devnet broadcast.
-- No mainnet transactions during the hackathon build.
-- No paid RPC.
+- Default Dodo path is sandbox mode; Dodo test/live credentials switch it into real checkout.
+- Default Solana path is payout preview mode; connected wallets prepare mainnet batches.
+- No fake mainnet signatures or fake payment volume.
 - No hosted database bill.
 - No paid AI, analytics, email, storage, or auth services.
 - No committed secrets or private keys.
@@ -52,7 +51,7 @@ The demo should feel like launching a real paid product.
    - 10% data/API vendor
    - 5% agent runtime provider
    - 5% DodoLaunch platform fee
-6. Solana devnet/payout preview prepares every split; real explorer proof is only shown after devnet broadcast.
+6. Solana mainnet/payout preview prepares every split; real explorer proof is only shown after wallet-approved mainnet broadcast.
 7. x402 demo shows an agent buying paid API access and joining the same revenue ledger.
 8. Judges see a product that can make money for founders, Dodo, and us.
 
@@ -67,7 +66,7 @@ The demo should feel like launching a real paid product.
 - Revenue ledger.
 - Split model with founder, affiliate, vendor, agent/runtime, and platform fee.
 - CSV export for revenue split report.
-- Solana settlement batch preview with no fake explorer links.
+- Solana mainnet settlement batch preview with no fake explorer links.
 - x402-style paid API endpoint demo.
 - README with free build path and revenue model.
 - Demo script for a 2-minute judging walkthrough.
@@ -83,7 +82,6 @@ The demo should feel like launching a real paid product.
 ### Do Not Build Yet
 
 - Real production custody.
-- Mainnet payments.
 - Paid RPC.
 - Hosted database.
 - KYC/KYB.

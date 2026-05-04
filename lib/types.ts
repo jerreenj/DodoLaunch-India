@@ -3,9 +3,11 @@ export type Money = {
   currency: "USDG" | "USDC";
 };
 
-export type DodoMode = "demo" | "test";
+export type DodoMode = "demo" | "test" | "live";
 
-export type SolanaMode = "simulate" | "devnet";
+export type SolanaMode = "simulate" | "devnet" | "mainnet";
+
+export type SolanaNetwork = "devnet" | "mainnet-beta";
 
 export type DodoCheckout = {
   mode: DodoMode;
@@ -15,7 +17,7 @@ export type DodoCheckout = {
   customer: string;
   amount: Money;
   createdAt: string;
-  zeroDollar: true;
+  zeroDollar: boolean;
 };
 
 export type ProductConfig = {
@@ -81,17 +83,17 @@ export type PayoutLine = Recipient & {
 export type PayoutBatch = {
   id: string;
   mode: SolanaMode;
-  network: "devnet";
+  network: SolanaNetwork;
   sourceSettlementId: string;
   total: Money;
   tokenMint: string;
   executionStatus: "preview" | "broadcasted";
-  costStatus: "not-broadcast" | "devnet-paid";
+  costStatus: "not-broadcast" | "devnet-paid" | "mainnet-requires-wallet";
   previewIds: string[];
   chainProofUrls: string[];
   lines: PayoutLine[];
   createdAt: string;
-  zeroDollar: true;
+  zeroDollar: boolean;
 };
 
 export type DemoState = {

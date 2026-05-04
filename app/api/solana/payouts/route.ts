@@ -7,13 +7,15 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const settlement = (body.settlement ?? initialSettlement) as SettlementEntry;
   const mode = (body.mode ?? "simulate") as SolanaMode;
-  const batch = createPayoutBatch(settlement, mode === "devnet" ? "devnet" : "simulate");
+  const batch = createPayoutBatch(settlement, mode === "mainnet" ? "mainnet" : mode === "devnet" ? "devnet" : "simulate");
 
   return NextResponse.json({
     batch,
     message:
       batch.mode === "simulate"
         ? "Solana revenue split simulation prepared. No wallet funding required."
-        : "Devnet revenue split batch prepared. Use only free devnet tokens.",
+        : batch.mode === "mainnet"
+          ? "Mainnet revenue split batch prepared. Broadcast only after wallet approval and funded USDC/SOL."
+          : "Devnet revenue split batch prepared. Use only free devnet tokens.",
   });
 }

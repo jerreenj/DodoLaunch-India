@@ -8,8 +8,10 @@ export async function POST(request: Request) {
   return NextResponse.json({
     checkout,
     message:
-      checkout.mode === "test"
+      checkout.mode === "live"
+        ? "Dodo live checkout created for the paid AI product."
+        : checkout.mode === "test"
         ? "Dodo test checkout created for the paid AI product."
-        : "Demo Dodo checkout created for the paid AI product without requiring credentials.",
+        : "Sandbox Dodo checkout created for the paid AI product without requiring credentials.",
   });
 }
