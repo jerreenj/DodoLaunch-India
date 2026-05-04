@@ -52,7 +52,7 @@ Date: 2026-05-04
 - Two-minute walkthrough video
 - Product description
 - Screenshots
-- Pilot feedback link
+- Pilot feedback link: https://github.com/jerreenj/DodoLaunch-India/issues/1
 - Honest note: no mainnet, no real payment volume claim, no paid services used to build
 
 ## Last Mile

@@ -33,6 +33,7 @@ The hackathon build path costs **$0** by using Dodo test/demo mode, Solana devne
 
 - **Live app:** https://dodolaunch-india.vercel.app
 - **GitHub repo:** https://github.com/jerreenj/DodoLaunch-India
+- **Pilot feedback:** https://github.com/jerreenj/DodoLaunch-India/issues/1
 - **Hackathon track:** Payments Track | Superteam India x Dodo Payments
 
 ## Submission Status
@@ -159,7 +160,7 @@ Leaving the values blank is valid and keeps the app in free demo mode.
 
 1. Send the Vercel link to the first 20 users.
 2. Ask them to use **Try without wallet** first.
-3. Collect feedback through GitHub Issues.
+3. Collect feedback through [GitHub issue #1](https://github.com/jerreenj/DodoLaunch-India/issues/1).
 4. Fix confusing copy, broken flows, and mobile layout issues.
 5. Send to the next 200 users after the first feedback pass.
 
