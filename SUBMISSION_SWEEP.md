@@ -30,6 +30,21 @@ Use this before sending the Superteam Earn and Colosseum submission.
 - Git status clean after commits
 - GitHub push complete
 
+## Latest Local Sweep
+
+Date: 2026-05-04
+
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` | Passed |
+| `npm run build` | Passed |
+| Local production home page | 200 OK |
+| Dodo checkout route | Passed in demo mode |
+| Dodo webhook route | Passed and returned `received: true` |
+| Solana payout route | Passed in `simulate` mode |
+| x402 unpaid route | Passed with `402` |
+| x402 paid route | Passed and returned an event |
+
 ## Submission Package
 
 - GitHub URL
