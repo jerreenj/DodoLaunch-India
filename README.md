@@ -87,6 +87,7 @@ The first prototype focuses on this workflow:
 - Vercel free-tier deployment path with no required secrets.
 
 See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
+Use the final checklist before submission: [SUBMISSION_SWEEP.md](./SUBMISSION_SWEEP.md).
 
 ## Judge Demo Script
 
