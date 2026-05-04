@@ -42,9 +42,10 @@ The hackathon build path costs **$0** by using Dodo test/demo mode, Solana devne
 | --- | --- |
 | App | Live on Vercel |
 | Checkout | Dodo test mode when keys exist, built-in demo mode when keys are blank |
+| Webhooks | Demo mode accepts local test events; production secret mode rejects missing or invalid signatures |
 | Ledger | Working browser-local revenue ledger |
 | Splits | Founder, affiliate, vendor, agent/runtime, and platform fee split model |
-| Settlement | Solana devnet-ready preview; no fake mainnet or fake explorer proof |
+| Settlement | Solana simulate mode by default; connected-wallet path prepares devnet batches |
 | x402 | Working HTTP 402 demo route for paid agent/API access |
 | Cost to build | No paid hosting, no paid database, no paid RPC, no paid AI API |
 
@@ -77,7 +78,7 @@ The first prototype focuses on this workflow:
 - Dodo sale webhook route that normalizes events into a revenue ledger.
 - Revenue split model for founder, affiliate, vendor, agent/runtime, and platform fee.
 - Browser-generated CSV export for revenue split reports.
-- Solana devnet/simulate settlement batch preview with no fake explorer links.
+- Solana simulate/devnet settlement batch preview with no fake explorer links.
 - x402-style HTTP 402 demo for paid agent/API access.
 - First-time user guide inside the app.
 - Default **Try without wallet** mode for early users.
@@ -108,7 +109,7 @@ The product does not claim real mainnet volume during judging. It shows a real w
 - Next.js App Router
 - TypeScript
 - Dodo Payments TypeScript SDK
-- Solana devnet / payout preview mode
+- Solana devnet / payout preview mode / browser wallet connect
 - x402-style HTTP 402 demo route
 - Vercel free-tier hosting
 
@@ -120,7 +121,7 @@ The hackathon version runs without spending any money:
 - No mainnet SOL, USDC, or paid RPC is used.
 - No hosted database is required; demo state is stored in the browser.
 - Optional real test credentials live only in `.env.local`.
-- The default settlement path is Solana payout preview mode; no chain proof is claimed until a real devnet transaction is broadcast.
+- The default settlement path is Solana payout preview mode; connected wallets can prepare devnet batches, and no chain proof is claimed until a real devnet transaction is broadcast.
 
 ## Local Development
 
@@ -154,7 +155,7 @@ Leaving the values blank is valid and keeps the app in free demo mode.
 
 - Live today: product setup, Dodo demo/test checkout route, ledger, split CSV, and x402-style HTTP 402 flow.
 - Real when configured: Dodo test checkout uses `DODO_PAYMENTS_API_KEY` and `DODO_PRODUCT_ID`.
-- Preview only: Solana settlement does not claim a broadcast transaction until a real devnet signature exists.
+- Preview/devnet-ready: Solana settlement does not claim a broadcast transaction until a real devnet signature exists.
 - Not claimed: mainnet, real funds, real payment volume, paid infrastructure, or production custody.
 
 ## Pilot Rollout

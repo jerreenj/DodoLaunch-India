@@ -36,7 +36,7 @@ export type DodoPaymentEvent = {
   customer: string;
   productName: string;
   amount: Money;
-  signatureStatus: "demo-accepted" | "verified" | "missing-secret";
+  signatureStatus: "demo-accepted" | "verified" | "missing-secret" | "invalid";
   receivedAt: string;
 };
 

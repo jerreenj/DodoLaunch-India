@@ -96,5 +96,5 @@ export async function verifyDodoWebhook(rawBody: string, request: Request) {
 
   const signedMessage = `${webhookId}.${timestamp}.${rawBody}`;
   const expected = crypto.createHmac("sha256", secret).update(signedMessage).digest("hex");
-  return signature.includes(expected) ? ("verified" as const) : ("missing-secret" as const);
+  return signature.includes(expected) ? ("verified" as const) : ("invalid" as const);
 }

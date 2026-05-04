@@ -9,6 +9,7 @@ Use this before sending the Superteam Earn and Colosseum submission.
 - README starts with live app, GitHub, Dodo, Solana, and stack badges.
 - The app is presented as a product, not an internal checklist.
 - Copy is honest about Dodo test/demo mode and Solana devnet-ready settlement.
+- Webhook route rejects missing or invalid signatures when a Dodo webhook secret is configured.
 
 ## User Flow
 
@@ -42,8 +43,11 @@ Date: 2026-05-04
 | Local production home page | 200 OK |
 | Dodo checkout route | Passed in demo mode |
 | Dodo webhook route | Passed and returned `received: true` |
-| Solana payout route | Passed in `simulate` mode |
+| Invalid webhook JSON | Passed with `400` |
+| Missing webhook signature with secret | Passed with `401` |
+| Solana payout route | Passed in `devnet` mode |
 | Wallet connect UI | Added Phantom/Solana injected wallet connect path |
+| Production webhook guard | Added invalid JSON and bad signature rejection |
 | x402 unpaid route | Passed with `402` |
 | x402 paid route | Passed and returned an event |
 

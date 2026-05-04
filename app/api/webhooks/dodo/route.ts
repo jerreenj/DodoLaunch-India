@@ -4,8 +4,33 @@ import { settlementFromDodoEvent } from "../../../../lib/settlement";
 
 export async function POST(request: Request) {
   const rawBody = await request.text();
-  const payload = rawBody ? JSON.parse(rawBody) : {};
+  let payload: { checkout?: Parameters<typeof createDemoDodoEvent>[0] } = {};
+
+  try {
+    payload = rawBody ? JSON.parse(rawBody) : {};
+  } catch {
+    return NextResponse.json(
+      {
+        received: false,
+        message: "Invalid JSON webhook payload.",
+      },
+      { status: 400 },
+    );
+  }
+
   const signatureStatus = await verifyDodoWebhook(rawBody, request);
+
+  if (signatureStatus === "missing-secret" || signatureStatus === "invalid") {
+    return NextResponse.json(
+      {
+        received: false,
+        signatureStatus,
+        message: "Dodo webhook signature is missing or invalid.",
+      },
+      { status: 401 },
+    );
+  }
+
   const event = {
     ...createDemoDodoEvent(payload.checkout),
     signatureStatus,

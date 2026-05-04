@@ -360,7 +360,7 @@ export default function Component() {
       const response = await fetch("/api/solana/payouts", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ settlement: selectedSettlement, mode: "simulate" }),
+        body: JSON.stringify({ settlement: selectedSettlement, mode: walletAddress ? "devnet" : "simulate" }),
       });
       const data = (await response.json()) as { batch: PayoutBatch; message: string };
       setState((current) => ({ ...current, payoutBatches: [data.batch, ...current.payoutBatches] }));
