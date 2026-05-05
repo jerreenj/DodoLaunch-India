@@ -117,7 +117,7 @@ const workspaceViews: Array<{
   {
     id: "agent",
     label: "Agent Pay",
-    description: "x402 paid API flow",
+    description: "Agentic x402 revenue",
     icon: Bot,
   },
 ];
@@ -656,7 +656,10 @@ export default function Component() {
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-7 text-white/64 sm:text-lg">
             A mainnet-ready workspace for AI and SaaS founders: create a Dodo checkout, record paid sales,
-            calculate partner splits, export reports, and approve USDC payouts from your wallet.
+            let agents pay for API access with x402, calculate partner splits, and settle everything in USDC.
+          </p>
+          <p className="mt-4 max-w-2xl text-sm font-semibold text-emerald-100/75">
+            Agentic & Autonomous Payments: AI agents can transact, get paid, and route USDC revenue into the same split ledger.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button type="button" variant="gradient" size="lg" onClick={() => goToWorkspace("launch")}>
@@ -711,7 +714,8 @@ export default function Component() {
             {[
               ["1", "Create Dodo checkout", latestCheckout ? "Done" : "Pending"],
               ["2", "Record successful sale", state.settlementEntries.length ? "Ledger active" : "Awaiting sale"],
-              ["3", "Approve USDC payout", mainnetTx.status === "broadcasted" ? "Proof live" : "Wallet approval"],
+              ["3", "Route x402 agent revenue", state.x402Events.length ? "Done" : "Optional"],
+              ["4", "Approve USDC payout", mainnetTx.status === "broadcasted" ? "Proof live" : "Wallet approval"],
             ].map(([index, title, detail]) => (
               <div className="grid grid-cols-[34px_1fr] items-center gap-3 rounded-lg border border-white/10 bg-black/25 p-3" key={title}>
                 <span className="grid size-8 place-items-center rounded-md bg-white/10 text-xs font-black text-emerald-200">{index}</span>
@@ -1060,10 +1064,10 @@ export default function Component() {
             {activeView === "agent" ? (
               <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
                 <ShellCard>
-                  <Label>Agentic payments</Label>
-                  <h3 className="mt-2 text-3xl font-semibold">Protect API revenue with x402</h3>
+                  <Label>Agentic & Autonomous Payments</Label>
+                  <h3 className="mt-2 text-3xl font-semibold">Let AI agents pay, get paid, and split revenue</h3>
                   <p className="mt-3 text-sm leading-6 text-white/54">
-                    AI agents can hit a paid endpoint, receive a 402 challenge, attach payment proof, and route the resulting revenue into the same ledger.
+                    AI agents can hit a paid endpoint, receive a 402 challenge, attach payment proof, and route the resulting USDC revenue into the same ledger without a manual ops step.
                   </p>
                   <Button type="button" variant="gradient" className="mt-5" disabled={busyAction !== null} onClick={runX402Demo}>
                     {busyAction === "x402" ? "Routing..." : "Run paid API flow"}
@@ -1084,6 +1088,20 @@ export default function Component() {
                     GET /api/x402/agent-data
                     <br />
                     x-payment: {state.x402Events.length ? "demo-paid" : "required"}
+                  </div>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                    <div className="rounded-lg border border-white/10 bg-black/25 p-4">
+                      <Label>Agent Buyer</Label>
+                      <strong className="mt-2 block">Autonomous Support Agent</strong>
+                    </div>
+                    <div className="rounded-lg border border-white/10 bg-black/25 p-4">
+                      <Label>Revenue</Label>
+                      <strong className="mt-2 block">{state.x402Events[0] ? formatMoney(state.x402Events[0].amount.amount, state.x402Events[0].amount.currency) : "2.4 USDC"}</strong>
+                    </div>
+                    <div className="rounded-lg border border-white/10 bg-black/25 p-4">
+                      <Label>Settlement</Label>
+                      <strong className="mt-2 block">Same USDC Ledger</strong>
+                    </div>
                   </div>
                   <p className="mt-4 text-sm leading-6 text-white/56">{x402Preview}</p>
                 </ShellCard>
