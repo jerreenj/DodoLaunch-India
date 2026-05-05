@@ -96,6 +96,12 @@ export type PayoutBatch = {
   zeroDollar: boolean;
 };
 
+export type MainnetTransactionStatus = {
+  status: "idle" | "building" | "awaiting-wallet" | "broadcasted" | "failed";
+  signature?: string;
+  error?: string;
+};
+
 export type DemoState = {
   checkouts: DodoCheckout[];
   dodoEvents: DodoPaymentEvent[];

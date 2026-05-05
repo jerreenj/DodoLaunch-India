@@ -14,8 +14,9 @@ Use this before sending the Superteam Earn and Colosseum submission.
 ## User Flow
 
 - First-time user can understand what DodoLaunch does from the first screen.
-- **Try without wallet** works for normal testers.
 - **Connect wallet** detects Phantom/Solana wallet providers for mainnet settlement operators.
+- **Approve mainnet transfer** builds a wallet-signed USDC transaction and only shows proof after broadcast.
+- Top-right action is wallet connect, not a status placeholder.
 - **Create checkout** creates a Dodo checkout event.
 - Sale webhook routes revenue into the ledger.
 - Revenue split totals match the original sale amount.
@@ -49,6 +50,8 @@ Date: 2026-05-04
 | Solana network | Passed with `mainnet-beta` |
 | USDC mint | Passed with mainnet USDC mint `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v` |
 | Wallet connect UI | Added Phantom/Solana injected wallet connect path |
+| Top-right wallet action | Passed; old trial wording removed |
+| Mainnet transaction builder | Passed; creates wallet-approved USDC transfer instructions |
 | Production webhook guard | Added invalid JSON and bad signature rejection |
 | x402 unpaid route | Passed with `402` |
 | x402 paid route | Passed and returned an event |

@@ -6,7 +6,7 @@ export const merchant = {
   product: "SupportAgent Pro credit pack",
   customer: "OrbitWorks Pte Ltd",
   amount: 1280,
-  currency: "USDG" as const,
+  currency: "USDC" as const,
 };
 
 export const defaultProductConfig: ProductConfig = {
@@ -25,7 +25,7 @@ export const recipients: Recipient[] = [
     name: "Founder treasury",
     role: "founder",
     region: "India",
-    wallet: "D3moFounder1111111111111111111111111111",
+    wallet: "Bhgt1XQxJHgb1Z4TygenJt7gpsUSodDBPhy5XnShxjsZ",
     splitBps: 7000,
   },
   {
@@ -33,7 +33,7 @@ export const recipients: Recipient[] = [
     name: "Launch affiliate",
     role: "affiliate",
     region: "UAE",
-    wallet: "D3moAffiliate222222222222222222222222222",
+    wallet: "3C3SkYEPBongTXtra9RhdEr8NfQ4BngCPJnuaM18goCh",
     splitBps: 1000,
   },
   {
@@ -41,7 +41,7 @@ export const recipients: Recipient[] = [
     name: "Data/API vendor",
     role: "vendor",
     region: "Vietnam",
-    wallet: "D3moVendor3333333333333333333333333333",
+    wallet: "GCCaVxDpT7KcKcgnXEpvVmkWLi5SmnJ1WU6C47KY3PfQ",
     splitBps: 1000,
   },
   {
@@ -49,7 +49,7 @@ export const recipients: Recipient[] = [
     name: "Agent runtime provider",
     role: "agent",
     region: "India",
-    wallet: "D3moAgent44444444444444444444444444444",
+    wallet: "8yyzZyQowDPRQHQewcwMio5wwf9ik9ZptKTtY3nvGdjZ",
     splitBps: 500,
   },
   {
@@ -57,7 +57,7 @@ export const recipients: Recipient[] = [
     name: "DodoLaunch platform fee",
     role: "platform",
     region: "India",
-    wallet: "D3moPlatform55555555555555555555555555",
+    wallet: "CmkjWLDtnjUGUz5EnzNwT5nSGc9PSfUU1xGKS8s5EARX",
     splitBps: 500,
   },
 ];

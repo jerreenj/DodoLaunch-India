@@ -45,7 +45,7 @@ The product runs without secrets in sandbox mode, and becomes production-ready w
 | Webhooks | Sandbox mode accepts local test events; production secret mode rejects missing or invalid signatures |
 | Ledger | Working browser-local revenue ledger |
 | Splits | Founder, affiliate, vendor, agent/runtime, and platform fee split model |
-| Settlement | Solana simulate mode without a wallet; connected-wallet path prepares mainnet batches |
+| Settlement | Connected-wallet path prepares, signs, and broadcasts mainnet USDC batches |
 | x402 | Working HTTP 402 demo route for paid agent/API access |
 | Cost to build | No paid hosting, no paid database, no paid RPC, no paid AI API |
 
@@ -74,15 +74,16 @@ The first prototype focuses on this workflow:
 
 - Interactive launch dashboard for a paid AI product.
 - Founder workspace to configure product, buyer, launch note, and amount.
-- Dodo checkout route with free test mode or built-in demo mode.
+- Dodo checkout route with live, test, and sandbox modes.
 - Dodo sale webhook route that normalizes events into a revenue ledger.
 - Revenue split model for founder, affiliate, vendor, agent/runtime, and platform fee.
 - Browser-generated CSV export for revenue split reports.
-- Solana simulate/mainnet settlement batch preview with no fake explorer links.
+- Solana mainnet USDC settlement batch preview with wallet approval and no fake explorer links.
 - x402-style HTTP 402 demo for paid agent/API access.
 - First-time user guide inside the app.
-- Default **Try without wallet** mode for early users.
 - Real Phantom/Solana browser wallet connect for mainnet settlement operators.
+- Real wallet-signed mainnet USDC transaction builder and broadcaster.
+- Section-by-section product console for launch, checkout, ledger, settlement, and agent payments.
 - Mainnet wallet readiness instructions for SOL fees and USDC payouts.
 - GitHub Issues feedback CTA before scaling from 20 to 200 users.
 - Clear mainnet-ready labels with no fake broadcast claims.
@@ -95,12 +96,13 @@ Use the final checklist before submission: [SUBMISSION_SWEEP.md](./SUBMISSION_SW
 ## Judge Demo Script
 
 1. Open the live app.
-2. Keep **Try without wallet** selected.
+2. Connect a Phantom/Solana wallet from the top-right action.
 3. Click **Create checkout** to generate a Dodo checkout event.
 4. Replay the sale webhook to route the paid event into the ledger.
 5. Build the revenue split to see the settlement batch and platform fee.
-6. Run the x402 agent/API sale to show autonomous paid access.
-7. Export the CSV split report.
+6. Approve the mainnet transfer flow from the settlement section when the wallet is funded.
+7. Run the x402 agent/API sale to show autonomous paid access.
+8. Export the CSV split report.
 
 The product does not fake mainnet volume during judging. It shows a working product flow with honest Dodo live/test/sandbox modes and mainnet-ready Solana settlement boundaries.
 
@@ -153,19 +155,19 @@ Leaving Dodo values blank is valid and keeps the app in sandbox mode.
 3. Click **Build Revenue Split** to generate the Solana settlement batch.
 4. Click **Run x402 API Sale** to show paid API access for agentic buyers.
 5. Edit the product details in **Founder workspace** and export the split report CSV.
-6. Keep **Try without wallet** selected for normal testers, or connect Phantom for mainnet settlement readiness.
+6. Connect Phantom for mainnet settlement readiness and approval.
 
 ## Reality Check
 
 - Live today: product setup, Dodo sandbox/test/live checkout route, ledger, split CSV, wallet connect, and x402-style HTTP 402 flow.
 - Real when configured: Dodo live checkout uses `DODO_PAYMENTS_API_KEY`, `DODO_PAYMENTS_ENVIRONMENT=live_mode`, and `DODO_PRODUCT_ID`.
-- Mainnet-ready: Solana settlement prepares mainnet batches for connected wallets.
+- Mainnet-ready: Solana settlement prepares mainnet batches and can request wallet approval for a real USDC transfer.
 - Not claimed: completed mainnet broadcast, real payment volume, or production custody unless a real signature/payment is shown.
 
 ## Pilot Rollout
 
 1. Send the Vercel link to the first 20 users.
-2. Ask them to use **Try without wallet** first.
+2. Ask wallet testers to use Phantom in a wallet-enabled browser.
 3. Collect feedback through [GitHub issue #1](https://github.com/jerreenj/DodoLaunch-India/issues/1).
 4. Fix confusing copy, broken flows, and mobile layout issues.
 5. Send to the next 200 users after the first feedback pass.

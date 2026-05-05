@@ -7,7 +7,8 @@ export async function POST(request: Request) {
   let payload: { checkout?: Parameters<typeof createDemoDodoEvent>[0] } = {};
 
   try {
-    payload = rawBody ? JSON.parse(rawBody) : {};
+    const parsed = rawBody ? JSON.parse(rawBody) : {};
+    payload = parsed && typeof parsed === "object" ? parsed : {};
   } catch {
     return NextResponse.json(
       {

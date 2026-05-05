@@ -23,6 +23,7 @@ import type {
   DemoState,
   DodoCheckout,
   DodoPaymentEvent,
+  MainnetTransactionStatus,
   PayoutBatch,
   ProductConfig,
   SettlementEntry,
@@ -36,6 +37,8 @@ type SolanaProvider = {
   publicKey?: { toString: () => string };
   connect: (options?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey: { toString: () => string } }>;
   disconnect?: () => Promise<void>;
+  signTransaction?: <T>(transaction: T) => Promise<T>;
+  signAndSendTransaction?: <T>(transaction: T) => Promise<{ signature: string }>;
 };
 
 declare global {
@@ -127,6 +130,8 @@ const productionWalletSteps = [
   "Keep enough SOL for network fees and enough USDC for payouts.",
   "Explorer proof appears only after a real wallet-approved mainnet broadcast exists.",
 ];
+
+const MAINNET_USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
 function ShellCard({
   children,
@@ -226,7 +231,7 @@ export default function Component() {
   const [state, setState] = React.useState<DemoState>(initialDemoState);
   const [selectedSettlementId, setSelectedSettlementId] = React.useState(initialDemoState.settlementEntries[0].id);
   const [productConfig, setProductConfig] = React.useState<ProductConfig>(defaultProductConfig);
-  const [mode, setMode] = React.useState<"trial" | "wallet">("trial");
+  const [walletPanelOpen, setWalletPanelOpen] = React.useState(false);
   const [activeView, setActiveView] = React.useState<WorkspaceView>("launch");
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [busyAction, setBusyAction] = React.useState<string | null>(null);
@@ -235,6 +240,7 @@ export default function Component() {
   const [walletAddress, setWalletAddress] = React.useState("");
   const [walletError, setWalletError] = React.useState("");
   const [walletConnecting, setWalletConnecting] = React.useState(false);
+  const [mainnetTx, setMainnetTx] = React.useState<MainnetTransactionStatus>({ status: "idle" });
 
   React.useEffect(() => {
     try {
@@ -274,7 +280,7 @@ export default function Component() {
       .connect({ onlyIfTrusted: true })
       .then((response) => {
         setWalletAddress(response.publicKey.toString());
-        setMode("wallet");
+        setWalletPanelOpen(true);
       })
       .catch(() => {
         setWalletAddress("");
@@ -356,14 +362,21 @@ export default function Component() {
   }
 
   async function preparePayout() {
+    if (!walletAddress) {
+      await connectWallet();
+      setMessage("Connect a wallet before preparing the mainnet settlement batch.");
+      return;
+    }
+
     await runAction("payout", async () => {
       const response = await fetch("/api/solana/payouts", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ settlement: selectedSettlement, mode: walletAddress ? "mainnet" : "simulate" }),
+        body: JSON.stringify({ settlement: selectedSettlement, mode: "mainnet" }),
       });
       const data = (await response.json()) as { batch: PayoutBatch; message: string };
       setState((current) => ({ ...current, payoutBatches: [data.batch, ...current.payoutBatches] }));
+      setMainnetTx({ status: "idle" });
       setMessage(data.message);
       setActiveView("settlement");
     });
@@ -395,7 +408,7 @@ export default function Component() {
   }
 
   async function connectWallet() {
-    setMode("wallet");
+    setWalletPanelOpen(true);
     setActiveView("settlement");
     setWalletError("");
 
@@ -427,7 +440,90 @@ export default function Component() {
     await provider?.disconnect?.();
     setWalletAddress("");
     setWalletError("");
-    setMessage("Wallet disconnected. No wallet trial is still available.");
+    setMainnetTx({ status: "idle" });
+    setMessage("Wallet disconnected. Connect a wallet before mainnet settlement.");
+  }
+
+  async function broadcastMainnetBatch() {
+    const batch = latestBatch;
+    if (!batch) {
+      setMessage("Prepare a mainnet settlement batch before wallet approval.");
+      setActiveView("settlement");
+      return;
+    }
+
+    const provider = getSolanaProvider();
+    if (!provider || !walletAddress) {
+      await connectWallet();
+      return;
+    }
+
+    setMainnetTx({ status: "building" });
+    try {
+      const [{ Connection, PublicKey, Transaction }, splToken] = await Promise.all([
+        import("@solana/web3.js"),
+        import("@solana/spl-token"),
+      ]);
+      const {
+        createAssociatedTokenAccountIdempotentInstruction,
+        createTransferCheckedInstruction,
+        getAssociatedTokenAddressSync,
+      } = splToken;
+
+      const rpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? "https://api.mainnet-beta.solana.com";
+      const connection = new Connection(rpcUrl, "confirmed");
+      const payer = new PublicKey(walletAddress);
+      const mint = new PublicKey(MAINNET_USDC_MINT);
+      const sourceTokenAccount = getAssociatedTokenAddressSync(mint, payer);
+      const transaction = new Transaction();
+
+      for (const line of batch.lines) {
+        const recipient = new PublicKey(line.wallet);
+        const destinationTokenAccount = getAssociatedTokenAddressSync(mint, recipient);
+        const tokenAmount = BigInt(Math.round(line.amount.amount * 1_000_000));
+
+        transaction.add(
+          createAssociatedTokenAccountIdempotentInstruction(payer, destinationTokenAccount, recipient, mint),
+          createTransferCheckedInstruction(sourceTokenAccount, mint, destinationTokenAccount, payer, tokenAmount, 6),
+        );
+      }
+
+      const latestBlockhash = await connection.getLatestBlockhash("confirmed");
+      transaction.feePayer = payer;
+      transaction.recentBlockhash = latestBlockhash.blockhash;
+      setMainnetTx({ status: "awaiting-wallet" });
+
+      let signature = "";
+      if (provider.signAndSendTransaction) {
+        const result = await provider.signAndSendTransaction(transaction);
+        signature = result.signature;
+      } else if (provider.signTransaction) {
+        const signed = await provider.signTransaction(transaction);
+        const rawTransaction = signed.serialize();
+        signature = await connection.sendRawTransaction(rawTransaction, { skipPreflight: false });
+      } else {
+        throw new Error("Connected wallet does not support transaction signing.");
+      }
+
+      setMainnetTx({ status: "broadcasted", signature });
+      setState((current) => ({
+        ...current,
+        payoutBatches: current.payoutBatches.map((item) =>
+          item.id === batch.id
+            ? {
+                ...item,
+                executionStatus: "broadcasted",
+                chainProofUrls: [`https://solscan.io/tx/${signature}`],
+              }
+            : item,
+        ),
+      }));
+      setMessage(`Mainnet transaction broadcast: ${signature.slice(0, 8)}...${signature.slice(-8)}`);
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : "Wallet rejected or RPC could not broadcast the transaction.";
+      setMainnetTx({ status: "failed", error: detail });
+      setMessage(`Mainnet transaction not broadcast: ${detail}`);
+    }
   }
 
   function resetWorkspace() {
@@ -435,6 +531,7 @@ export default function Component() {
     setSelectedSettlementId(initialDemoState.settlementEntries[0].id);
     setMessage("Workspace reset. Production workspace is ready.");
     setX402Preview("Agent data is protected until a payment proof is attached.");
+    setMainnetTx({ status: "idle" });
     setActiveView("launch");
   }
 
@@ -490,6 +587,12 @@ export default function Component() {
 
   const activeViewMeta = workspaceViews.find((view) => view.id === activeView) ?? workspaceViews[0];
   const heroProductName = productConfig.productName.replace("SupportAgent", "Support Agent");
+  const transactionSteps = [
+    ["1", "Ledger", selectedSettlement ? "Revenue selected" : "Select revenue"],
+    ["2", "Batch", latestBatch ? `${latestBatch.lines.length} payout lines` : "Prepare mainnet batch"],
+    ["3", "Wallet", walletAddress ? shortWallet(walletAddress) : "Connect wallet"],
+    ["4", "Broadcast", mainnetTx.status === "broadcasted" ? "Signature live" : "Awaiting approval"],
+  ];
 
   return (
     <main className="min-h-screen bg-[#050705] text-white">
@@ -521,9 +624,10 @@ export default function Component() {
           </div>
 
           <div className="flex items-center gap-2">
-            <StatusPill tone={walletAddress || mode === "wallet" ? "blue" : "lime"}>
-              {walletAddress ? shortWallet(walletAddress) : mode === "trial" ? "No wallet trial" : "Connect wallet"}
-            </StatusPill>
+            <Button type="button" variant={walletAddress ? "secondary" : "default"} size="sm" onClick={connectWallet} disabled={walletConnecting}>
+              <Wallet className="size-4" />
+              {walletConnecting ? "Connecting..." : walletAddress ? shortWallet(walletAddress) : "Connect wallet"}
+            </Button>
             <Button
               type="button"
               variant="ghost"
@@ -615,13 +719,46 @@ export default function Component() {
             <div className="mb-3 flex items-center justify-between gap-3">
               <Label>Active product</Label>
               <StatusPill tone={walletAddress ? "blue" : "lime"}>
-                {walletAddress ? "Wallet connected" : mode === "trial" ? "No wallet" : "Wallet tester"}
+                {walletAddress ? "Wallet connected" : "Wallet required"}
               </StatusPill>
             </div>
             <strong className="block text-xl">{heroProductName}</strong>
             <p className="mt-2 text-sm leading-6 text-white/55">{productConfig.launchNote}</p>
           </div>
         </ShellCard>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 pb-6 sm:px-6">
+        <div className="grid gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-3 sm:grid-cols-5">
+          {workspaceViews.map((view, index) => {
+            const Icon = view.icon;
+            return (
+              <button
+                key={view.id}
+                type="button"
+                onClick={() => goToWorkspace(view.id)}
+                className={`group grid min-h-24 gap-3 rounded-lg border p-4 text-left transition ${
+                  activeView === view.id
+                    ? "border-lime/50 bg-lime text-ink"
+                    : "border-white/10 bg-black/20 text-white hover:border-white/20 hover:bg-white/8"
+                }`}
+              >
+                <span className="flex items-center justify-between gap-3">
+                  <Icon className="size-5" />
+                  <span className={`text-xs font-black ${activeView === view.id ? "text-ink/55" : "text-white/35"}`}>
+                    0{index + 1}
+                  </span>
+                </span>
+                <span>
+                  <strong className="block text-sm">{view.label}</strong>
+                  <span className={`mt-1 block text-xs leading-5 ${activeView === view.id ? "text-ink/62" : "text-white/42"}`}>
+                    {view.description}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6" id="workspace">
@@ -855,22 +992,48 @@ export default function Component() {
                     <Button type="button" variant="gradient" disabled={busyAction !== null} onClick={preparePayout}>
                       {busyAction === "payout" ? "Preparing..." : "Prepare payout batch"}
                     </Button>
-                    <Button type="button" variant="secondary" onClick={() => setMode(mode === "trial" ? "wallet" : "trial")}>
-                      {mode === "trial" ? "Show wallet tester path" : "Use no wallet trial"}
-                    </Button>
                     <Button type="button" variant={walletAddress ? "secondary" : "default"} onClick={connectWallet} disabled={walletConnecting}>
                       <Wallet className="size-4" />
                       {walletConnecting ? "Connecting wallet..." : walletAddress ? `Connected ${shortWallet(walletAddress)}` : "Connect Phantom wallet"}
                     </Button>
+                    <Button type="button" variant="secondary" disabled={!latestBatch || mainnetTx.status === "building" || mainnetTx.status === "awaiting-wallet"} onClick={broadcastMainnetBatch}>
+                      {mainnetTx.status === "building"
+                        ? "Building transaction..."
+                        : mainnetTx.status === "awaiting-wallet"
+                          ? "Awaiting wallet..."
+                          : "Approve mainnet transfer"}
+                    </Button>
                   </div>
-                  {mode === "wallet" ? (
+                  <div className="mt-5 grid gap-2">
+                    {transactionSteps.map(([index, title, detail]) => (
+                      <div className="grid grid-cols-[34px_1fr] items-center gap-3 rounded-lg border border-white/10 bg-black/24 p-3" key={title}>
+                        <span className="grid size-8 place-items-center rounded-md bg-lime text-xs font-black text-ink">{index}</span>
+                        <span>
+                          <strong className="block text-sm">{title}</strong>
+                          <span className="text-xs text-white/45">{detail}</span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {walletPanelOpen || walletAddress || walletError ? (
                     <div className="mt-5 grid gap-3">
                       <div className="rounded-lg border border-white/10 bg-black/24 p-4">
                         <Label>Wallet status</Label>
                         <strong className="mt-2 block break-all text-white">
-                          {walletAddress || "No wallet connected yet"}
+                          {walletAddress || "Wallet connection pending"}
                         </strong>
                         {walletError ? <p className="mt-2 text-sm leading-6 text-red-200">{walletError}</p> : null}
+                        {mainnetTx.status !== "idle" ? (
+                          <p className={`mt-2 text-sm leading-6 ${mainnetTx.status === "failed" ? "text-red-200" : "text-lime"}`}>
+                            {mainnetTx.status === "broadcasted" && mainnetTx.signature
+                              ? `Broadcasted: ${shortWallet(mainnetTx.signature)}`
+                              : mainnetTx.status === "failed"
+                                ? mainnetTx.error
+                                : mainnetTx.status === "awaiting-wallet"
+                                  ? "Approve the transaction in your wallet."
+                                  : "Building the mainnet USDC transfer transaction."}
+                          </p>
+                        ) : null}
                         {walletAddress ? (
                           <Button type="button" variant="ghost" size="sm" className="mt-3" onClick={disconnectWallet}>
                             Disconnect wallet
@@ -907,6 +1070,19 @@ export default function Component() {
                   </div>
                   {latestBatch ? (
                     <div className="grid gap-3">
+                      <div className="rounded-lg border border-lime/20 bg-lime/[0.08] p-4">
+                        <Label>Mainnet transfer</Label>
+                        <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                          <strong className="text-lg">{formatMoney(latestBatch.total.amount, latestBatch.total.currency)}</strong>
+                          <span className="text-sm text-white/55">{latestBatch.network}</span>
+                          <span className="break-all text-xs text-white/45">{latestBatch.tokenMint}</span>
+                        </div>
+                        {latestBatch.chainProofUrls[0] ? (
+                          <a className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-lime" href={latestBatch.chainProofUrls[0]} target="_blank" rel="noreferrer">
+                            View Solscan proof <ExternalLink className="size-4" />
+                          </a>
+                        ) : null}
+                      </div>
                       {latestBatch.lines.map((line, index) => (
                         <div className="grid gap-2 rounded-lg border border-white/10 bg-black/24 p-4 sm:grid-cols-[1fr_auto]" key={line.id}>
                           <span>
