@@ -9,12 +9,10 @@ import {
   ExternalLink,
   FileDown,
   Globe2,
-  Menu,
   Network,
   RefreshCw,
   Sparkles,
   Wallet,
-  X,
   Zap,
 } from "lucide-react";
 import { defaultProductConfig, initialDemoState, recipients } from "@/lib/demo-data";
@@ -57,10 +55,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "default", size = "default", className = "", children, ...props }, ref) => {
     const baseStyles =
-      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border font-semibold tracking-normal transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime/70 disabled:pointer-events-none disabled:opacity-50";
+      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border font-semibold tracking-normal transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dodo/70 disabled:pointer-events-none disabled:opacity-50";
 
     const variants = {
-      default: "border-lime bg-lime text-ink hover:bg-lime/90",
+      default: "border-dodo bg-dodo text-white hover:bg-dodo/90",
       secondary: "border-white/10 bg-white/10 text-white hover:border-white/20 hover:bg-white/15",
       ghost: "border-transparent bg-transparent text-white/68 hover:bg-white/10 hover:text-white",
       gradient:
@@ -172,7 +170,7 @@ function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`h-11 rounded-lg border border-white/10 bg-black/25 px-3 text-white outline-none transition focus:border-lime/60 ${
+      className={`h-11 rounded-lg border border-white/10 bg-black/25 px-3 text-white outline-none transition focus:border-dodo/70 ${
         props.className ?? ""
       }`}
     />
@@ -183,7 +181,7 @@ function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className={`min-h-24 rounded-lg border border-white/10 bg-black/25 p-3 text-white outline-none transition focus:border-lime/60 ${
+      className={`min-h-24 rounded-lg border border-white/10 bg-black/25 p-3 text-white outline-none transition focus:border-dodo/70 ${
         props.className ?? ""
       }`}
     />
@@ -199,8 +197,8 @@ function StatusPill({
 }) {
   const tones = {
     neutral: "border-white/10 bg-white/[0.08] text-white/68",
-    lime: "border-lime/30 bg-lime/12 text-lime",
-    blue: "border-frontier/35 bg-frontier/12 text-blue-200",
+    lime: "border-dodo/35 bg-dodo/[0.16] text-emerald-100",
+    blue: "border-frontier/35 bg-frontier/[0.14] text-blue-200",
   };
 
   return <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase ${tones[tone]}`}>{children}</span>;
@@ -227,15 +225,22 @@ function shortWallet(address: string) {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
 }
 
+function titleCase(value: string) {
+  return value
+    .split(/[\s_-]+/)
+    .filter(Boolean)
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1).toLowerCase()}`)
+    .join(" ");
+}
+
 export default function Component() {
   const [state, setState] = React.useState<DemoState>(initialDemoState);
   const [selectedSettlementId, setSelectedSettlementId] = React.useState(initialDemoState.settlementEntries[0].id);
   const [productConfig, setProductConfig] = React.useState<ProductConfig>(defaultProductConfig);
   const [walletPanelOpen, setWalletPanelOpen] = React.useState(false);
   const [activeView, setActiveView] = React.useState<WorkspaceView>("launch");
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [busyAction, setBusyAction] = React.useState<string | null>(null);
-  const [message, setMessage] = React.useState("Production workspace is ready. Add Dodo live keys when you want real checkout.");
+  const [message, setMessage] = React.useState("Ready: create a Dodo checkout, record the sale, then approve USDC payout from a wallet.");
   const [x402Preview, setX402Preview] = React.useState("Agent data is protected until a payment proof is attached.");
   const [walletAddress, setWalletAddress] = React.useState("");
   const [walletError, setWalletError] = React.useState("");
@@ -247,13 +252,41 @@ export default function Component() {
       const saved = window.localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved) as DemoState;
-        setState(parsed);
+        const migrated: DemoState = {
+          ...parsed,
+          checkouts: parsed.checkouts.map((checkout) => ({
+            ...checkout,
+            amount: { ...checkout.amount, currency: "USDC" },
+          })),
+          dodoEvents: parsed.dodoEvents.map((event) => ({
+            ...event,
+            amount: { ...event.amount, currency: "USDC" },
+          })),
+          x402Events: parsed.x402Events.map((event) => ({
+            ...event,
+            amount: { ...event.amount, currency: "USDC" },
+          })),
+          settlementEntries: parsed.settlementEntries.map((entry) => ({
+            ...entry,
+            amount: { ...entry.amount, currency: "USDC" },
+          })),
+          payoutBatches: parsed.payoutBatches.map((batch) => ({
+            ...batch,
+            total: { ...batch.total, currency: "USDC" },
+            lines: batch.lines.map((line) => ({
+              ...line,
+              amount: { ...line.amount, currency: "USDC" },
+            })),
+          })),
+        };
+        setState(migrated);
         setSelectedSettlementId(parsed.settlementEntries[0]?.id ?? initialDemoState.settlementEntries[0].id);
       }
 
       const savedProduct = window.localStorage.getItem(productStorageKey);
       if (savedProduct) {
-        setProductConfig(JSON.parse(savedProduct) as ProductConfig);
+        const parsedProduct = JSON.parse(savedProduct) as ProductConfig;
+        setProductConfig({ ...parsedProduct, currency: "USDC" });
       }
     } catch {
       window.localStorage.removeItem(storageKey);
@@ -529,7 +562,7 @@ export default function Component() {
   function resetWorkspace() {
     setState(initialDemoState);
     setSelectedSettlementId(initialDemoState.settlementEntries[0].id);
-    setMessage("Workspace reset. Production workspace is ready.");
+    setMessage("Ready: create a Dodo checkout, record the sale, then approve USDC payout from a wallet.");
     setX402Preview("Agent data is protected until a payment proof is attached.");
     setMainnetTx({ status: "idle" });
     setActiveView("launch");
@@ -545,8 +578,8 @@ export default function Component() {
       ...splitPreview.map((row) => [
         productConfig.productName,
         row.name,
-        row.role,
-        row.region,
+        titleCase(row.role),
+        titleCase(row.region),
         String(row.splitBps / 100),
         row.amount.toFixed(2),
         productConfig.currency,
@@ -575,7 +608,6 @@ export default function Component() {
 
   function selectView(view: WorkspaceView) {
     setActiveView(view);
-    setMobileMenuOpen(false);
   }
 
   function goToWorkspace(view: WorkspaceView) {
@@ -600,82 +632,37 @@ export default function Component() {
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050705]/88 backdrop-blur-xl">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <button className="flex items-center gap-3 text-left" type="button" onClick={() => selectView("launch")}>
-            <span className="grid size-9 place-items-center rounded-lg bg-lime font-black text-ink">D</span>
+            <span className="grid size-9 place-items-center rounded-lg bg-dodo font-black text-white">D</span>
             <span>
               <strong className="block text-sm leading-tight">DodoLaunch India</strong>
               <span className="hidden text-xs text-white/45 sm:block">Revenue OS for AI and SaaS founders</span>
             </span>
           </button>
 
-          <div className="hidden items-center gap-2 md:flex">
-            <button className="rounded-lg px-3 py-2 text-sm font-semibold text-white/58 transition hover:bg-white/[0.08] hover:text-white" type="button" onClick={() => goToWorkspace("checkout")}>
-              Checkout
-            </button>
-            <button className="rounded-lg px-3 py-2 text-sm font-semibold text-white/58 transition hover:bg-white/[0.08] hover:text-white" type="button" onClick={() => goToWorkspace("ledger")}>
-              Ledger
-            </button>
-            <button className="rounded-lg px-3 py-2 text-sm font-semibold text-white/58 transition hover:bg-white/[0.08] hover:text-white" type="button" onClick={() => goToWorkspace("settlement")}>
-              Settlement
-            </button>
-          </div>
-
           <div className="flex items-center gap-2">
             <Button type="button" variant={walletAddress ? "secondary" : "default"} size="sm" onClick={connectWallet} disabled={walletConnecting}>
               <Wallet className="size-4" />
               {walletConnecting ? "Connecting..." : walletAddress ? shortWallet(walletAddress) : "Connect wallet"}
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen((open) => !open)}
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
-            </Button>
           </div>
         </nav>
-
-        {mobileMenuOpen ? (
-          <div className="border-t border-white/10 bg-[#050705] px-4 py-3 md:hidden">
-            <div className="grid gap-2">
-              {workspaceViews.map((view) => (
-                <button
-                  className={`rounded-lg px-3 py-3 text-left text-sm font-semibold ${
-                    activeView === view.id ? "bg-lime text-ink" : "bg-white/[0.055] text-white/70"
-                  }`}
-                  key={view.id}
-                  type="button"
-                  onClick={() => selectView(view.id)}
-                >
-                  {view.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : null}
       </header>
 
       <section className="mx-auto grid min-h-[calc(100vh-64px)] max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
-          <div className="mb-6 flex flex-wrap gap-2">
-            <StatusPill tone="lime">Dodo Payments</StatusPill>
-            <StatusPill tone="blue">Solana mainnet</StatusPill>
-            <StatusPill>USDC settlement</StatusPill>
-          </div>
-          <h1 className="max-w-3xl text-5xl font-semibold leading-[0.95] tracking-normal text-white sm:text-7xl lg:text-8xl">
-            Revenue OS for AI founders.
+          <p className="mb-4 text-sm font-semibold uppercase text-emerald-200/80">Dodo checkout to Solana USDC payouts</p>
+          <h1 className="max-w-3xl text-5xl font-semibold leading-[0.98] tracking-normal text-white sm:text-6xl lg:text-7xl">
+            Sell globally. Split revenue instantly.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-7 text-white/64 sm:text-lg">
-            DodoLaunch India turns a Dodo checkout into a live revenue ledger, partner split, CSV report,
-            and wallet-approved Solana USDC settlement flow.
+            A mainnet-ready workspace for AI and SaaS founders: create a Dodo checkout, record paid sales,
+            calculate partner splits, export reports, and approve USDC payouts from your wallet.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button type="button" variant="gradient" size="lg" onClick={() => goToWorkspace("launch")}>
               Open console <ArrowRight className="size-4" />
             </Button>
-            <Button type="button" variant="secondary" size="lg" onClick={createCheckout} disabled={busyAction !== null}>
+            <Button type="button" variant="default" size="lg" onClick={createCheckout} disabled={busyAction !== null}>
               {busyAction === "checkout" ? "Creating..." : "Create checkout"}
             </Button>
             <Button type="button" variant="secondary" size="lg" onClick={connectWallet} disabled={walletConnecting}>
@@ -690,9 +677,9 @@ export default function Component() {
           <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
             <div>
               <Label>Live operating board</Label>
-              <h2 className="mt-2 text-3xl font-semibold leading-tight">Payments in. USDC out.</h2>
+              <h2 className="mt-2 text-3xl font-semibold leading-tight">From checkout to payout</h2>
             </div>
-            <span className="grid size-11 place-items-center rounded-lg bg-lime text-ink">
+            <span className="grid size-11 place-items-center rounded-lg bg-white/10 text-emerald-200">
               <Zap className="size-5" />
             </span>
           </div>
@@ -711,10 +698,10 @@ export default function Component() {
             ))}
           </div>
 
-          <div className="mt-4 grid gap-3 rounded-lg border border-lime/20 bg-lime/[0.08] p-4">
+          <div className="mt-4 grid gap-3 rounded-lg border border-white/10 bg-black/25 p-4">
             <div className="flex items-center justify-between gap-3">
               <Label>Active launch</Label>
-              <StatusPill tone={walletAddress ? "blue" : "lime"}>{walletAddress ? "Wallet connected" : "Wallet needed"}</StatusPill>
+              <StatusPill tone={walletAddress ? "blue" : "neutral"}>{walletAddress ? "Wallet connected" : "Wallet needed"}</StatusPill>
             </div>
             <strong className="block text-xl">{heroProductName}</strong>
             <p className="text-sm leading-6 text-white/58">{productConfig.launchNote}</p>
@@ -722,12 +709,12 @@ export default function Component() {
 
           <div className="mt-4 grid gap-3">
             {[
-              ["1", "Create paid Dodo checkout", latestCheckout ? "Session ready" : "Needs checkout"],
+              ["1", "Create Dodo checkout", latestCheckout ? "Done" : "Pending"],
               ["2", "Record successful sale", state.settlementEntries.length ? "Ledger active" : "Awaiting sale"],
               ["3", "Approve USDC payout", mainnetTx.status === "broadcasted" ? "Proof live" : "Wallet approval"],
             ].map(([index, title, detail]) => (
               <div className="grid grid-cols-[34px_1fr] items-center gap-3 rounded-lg border border-white/10 bg-black/25 p-3" key={title}>
-                <span className="grid size-8 place-items-center rounded-md bg-white/10 text-xs font-black text-lime">{index}</span>
+                <span className="grid size-8 place-items-center rounded-md bg-white/10 text-xs font-black text-emerald-200">{index}</span>
                 <span>
                   <strong className="block text-sm">{title}</strong>
                   <span className="text-xs text-white/45">{detail}</span>
@@ -752,7 +739,7 @@ export default function Component() {
                 return (
                   <button
                     className={`inline-flex min-w-max items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition ${
-                      activeView === view.id ? "bg-lime text-ink" : "text-white/58 hover:bg-white/[0.08] hover:text-white"
+                      activeView === view.id ? "bg-white text-ink" : "text-white/58 hover:bg-white/[0.08] hover:text-white"
                     }`}
                     key={view.id}
                     type="button"
@@ -780,7 +767,7 @@ export default function Component() {
                     </Button>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <Field label="Founder / company">
+                    <Field label="Founder / Company">
                       <TextInput value={productConfig.founderName} onChange={(event) => updateProduct("founderName", event.target.value)} />
                     </Field>
                     <Field label="Product name">
@@ -809,13 +796,13 @@ export default function Component() {
                 <ShellCard>
                   <Label>Commercial model</Label>
                   <h3 className="mt-2 text-3xl font-semibold">{formatMoney(productConfig.amount, productConfig.currency)}</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/52">The current sale routes to founder, growth, vendor, agent runtime, and platform revenue.</p>
+                  <p className="mt-2 text-sm leading-6 text-white/52">The current sale routes to Founder, Growth, Vendor, Agent Runtime, and Platform revenue.</p>
                   <div className="mt-5 grid grid-cols-2 gap-3">
                     {[
                       ["Founder", "70%"],
                       ["Growth", "10%"],
                       ["Vendor", "10%"],
-                      ["Agent + platform", "10%"],
+                      ["Agent + Platform", "10%"],
                     ].map(([label, value]) => (
                       <div className="rounded-lg border border-white/10 bg-black/25 p-4" key={label}>
                         <Label>{label}</Label>
@@ -860,7 +847,7 @@ export default function Component() {
                       <Label>Checkout session</Label>
                       <h3 className="mt-2 text-2xl font-semibold">{latestCheckout?.sessionId ?? "No session yet"}</h3>
                     </div>
-                    <CreditCard className="size-6 text-lime" />
+                    <CreditCard className="size-6 text-emerald-200" />
                   </div>
                   <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                     <Label>Payment link</Label>
@@ -903,14 +890,14 @@ export default function Component() {
                       <button
                         className={`grid gap-2 rounded-lg border p-4 text-left transition sm:grid-cols-[72px_1fr_auto] ${
                           entry.id === selectedSettlement.id
-                            ? "border-lime/50 bg-lime/[0.1]"
+                            ? "border-dodo/55 bg-dodo/[0.14]"
                             : "border-white/10 bg-black/25 hover:bg-white/[0.08]"
                         }`}
                         key={entry.id}
                         type="button"
                         onClick={() => setSelectedSettlementId(entry.id)}
                       >
-                        <span className="text-xs font-black uppercase text-lime">{entry.source}</span>
+                        <span className="text-xs font-black uppercase text-emerald-200">{entry.source}</span>
                         <span>
                           <strong className="block">{entry.label}</strong>
                           <span className="text-sm text-white/42">{entry.payer}</span>
@@ -937,7 +924,7 @@ export default function Component() {
                         <span>
                           <strong className="block">{recipient.name}</strong>
                           <span className="text-sm text-white/42">
-                            {recipient.role} / {recipient.region} / {recipient.splitBps / 100}%
+                            {titleCase(recipient.role)} / {titleCase(recipient.region)} / {recipient.splitBps / 100}%
                           </span>
                         </span>
                         <strong className="sm:text-right">{formatMoney(recipient.amount, productConfig.currency)}</strong>
@@ -975,7 +962,7 @@ export default function Component() {
                   <div className="mt-5 grid gap-2">
                     {transactionSteps.map(([index, title, detail]) => (
                       <div className="grid grid-cols-[34px_1fr] items-center gap-3 rounded-lg border border-white/10 bg-black/25 p-3" key={title}>
-                        <span className="grid size-8 place-items-center rounded-md bg-lime text-xs font-black text-ink">{index}</span>
+                        <span className="grid size-8 place-items-center rounded-md bg-white/10 text-xs font-black text-emerald-200">{index}</span>
                         <span>
                           <strong className="block text-sm">{title}</strong>
                           <span className="text-xs text-white/45">{detail}</span>
@@ -992,7 +979,7 @@ export default function Component() {
                         </strong>
                         {walletError ? <p className="mt-2 text-sm leading-6 text-red-200">{walletError}</p> : null}
                         {mainnetTx.status !== "idle" ? (
-                          <p className={`mt-2 text-sm leading-6 ${mainnetTx.status === "failed" ? "text-red-200" : "text-lime"}`}>
+                          <p className={`mt-2 text-sm leading-6 ${mainnetTx.status === "failed" ? "text-red-200" : "text-emerald-200"}`}>
                             {mainnetTx.status === "broadcasted" && mainnetTx.signature
                               ? `Broadcasted: ${shortWallet(mainnetTx.signature)}`
                               : mainnetTx.status === "failed"
@@ -1010,7 +997,7 @@ export default function Component() {
                       </div>
                       {productionWalletSteps.map((step) => (
                         <div className="flex gap-3 rounded-lg border border-white/10 bg-black/25 p-3" key={step}>
-                          <Check className="mt-0.5 size-4 shrink-0 text-lime" />
+                          <Check className="mt-0.5 size-4 shrink-0 text-emerald-200" />
                           <span className="text-sm leading-6 text-white/58">{step}</span>
                         </div>
                       ))}
@@ -1038,7 +1025,7 @@ export default function Component() {
                   </div>
                   {latestBatch ? (
                     <div className="grid gap-3">
-                      <div className="rounded-lg border border-lime/20 bg-lime/[0.08] p-4">
+                      <div className="rounded-lg border border-dodo/30 bg-dodo/[0.12] p-4">
                         <Label>Mainnet transfer</Label>
                         <div className="mt-2 grid gap-2 sm:grid-cols-3">
                           <strong className="text-lg">{formatMoney(latestBatch.total.amount, latestBatch.total.currency)}</strong>
@@ -1046,7 +1033,7 @@ export default function Component() {
                           <span className="break-all text-xs text-white/45">{latestBatch.tokenMint}</span>
                         </div>
                         {latestBatch.chainProofUrls[0] ? (
-                          <a className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-lime" href={latestBatch.chainProofUrls[0]} target="_blank" rel="noreferrer">
+                          <a className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-emerald-200" href={latestBatch.chainProofUrls[0]} target="_blank" rel="noreferrer">
                             View Solscan proof <ExternalLink className="size-4" />
                           </a>
                         ) : null}
@@ -1116,7 +1103,7 @@ export default function Component() {
       </section>
 
       <footer className="border-t border-white/10 px-4 py-8 text-center text-sm text-white/40 sm:px-6">
-        <Globe2 className="mx-auto mb-3 size-5 text-lime" />
+        <Globe2 className="mx-auto mb-3 size-5 text-emerald-200" />
         DodoLaunch India runs as a public product workspace for live checkout configuration, revenue routing, and mainnet settlement preparation.
       </footer>
     </main>
