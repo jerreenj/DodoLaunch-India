@@ -10,7 +10,7 @@ export function paymentRequiredResponse() {
         scheme: "exact",
         network: "solana-mainnet-beta",
         amount: "2.40",
-        currency: "USDG",
+        currency: "USDC",
         resource: "/api/x402/agent-data",
       },
     ],
@@ -29,7 +29,7 @@ export function createX402Event(): X402Event {
     type: "x402.payment.settled",
     buyer: "Autonomous support agent",
     resource: "Paid API call: support-agent answer pack",
-    amount: { amount: 2.4, currency: "USDG" },
+    amount: { amount: 2.4, currency: "USDC" },
     proof,
     receivedAt: now,
   };

@@ -1,6 +1,6 @@
 export type Money = {
   amount: number;
-  currency: "USDG" | "USDC";
+  currency: "USDC";
 };
 
 export type DodoMode = "demo" | "test" | "live";
@@ -25,7 +25,7 @@ export type ProductConfig = {
   productName: string;
   customerName: string;
   amount: number;
-  currency: "USDG" | "USDC";
+  currency: "USDC";
   productUrl: string;
   launchNote: string;
 };
