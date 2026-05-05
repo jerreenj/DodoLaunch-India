@@ -26,7 +26,7 @@ export function settlementFromX402Event(event: X402Event): SettlementEntry {
   };
 }
 
-export function formatMoney(amount: number, currency = "USDG") {
+export function formatMoney(amount: number, currency = "USDC") {
   return `${new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 2,
     minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
@@ -36,4 +36,3 @@ export function formatMoney(amount: number, currency = "USDG") {
 export function totalSettlement(entries: SettlementEntry[]) {
   return entries.reduce((sum, entry) => sum + entry.amount.amount, 0);
 }
-
