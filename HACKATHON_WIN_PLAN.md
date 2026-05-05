@@ -4,15 +4,15 @@
 
 Build **DodoLaunch India**, a launchpad that helps Indian AI and SaaS builders create paid products with Dodo Payments and automate revenue splits through Solana-ready settlement batches.
 
-**One-line pitch:** DodoLaunch turns Dodo Payments into the launch rail for Indian AI/SaaS products and Solana stablecoins into the programmable revenue-split rail.
+**One-line pitch:** DodoLaunch turns Dodo Payments into the launch rail for Indian AI/SaaS products and Solana USDC into the programmable revenue-split rail for people and agents.
 
 This is stronger than a generic payout dashboard because it creates revenue:
 
 - **Founders earn** by selling subscriptions, API credits, templates, and AI tools.
 - **Dodo earns** because the product brings new merchants, checkout sessions, subscriptions, and payment volume.
 - **DodoLaunch earns** through a platform fee on launched products.
-- **Solana matters** because revenue is split programmatically between founder, affiliate, vendor, agent/runtime provider, and platform.
-- **x402 bonus angle** adds paid API access for AI agents and autonomous buyers.
+- **Solana matters** because USDC revenue is split programmatically between founder, affiliate, vendor, agent/runtime provider, and platform.
+- **Agentic & Autonomous Payments angle** lets AI agents transact, get paid, and route revenue with x402.
 
 ## Production Readiness Constraint
 
@@ -34,7 +34,7 @@ Secondary users:
 
 - Affiliates who help distribute the product.
 - Data/API vendors who need usage-based revenue share.
-- Agent/runtime providers who get paid when their service is used.
+- Agent/runtime providers and AI agents who get paid when their service is used.
 - Dodo Payments, which gets more merchants and checkout volume.
 
 ## Winning Demo Story
@@ -52,7 +52,7 @@ The demo should feel like launching a real paid product.
    - 5% agent runtime provider
    - 5% DodoLaunch platform fee
 6. Solana mainnet/payout preview prepares every split; real explorer proof is only shown after wallet-approved mainnet broadcast.
-7. x402 demo shows an agent buying paid API access and joining the same revenue ledger.
+7. x402 demo shows an autonomous agent buying paid API access, producing USDC revenue, and joining the same revenue ledger.
 8. Judges see a product that can make money for founders, Dodo, and us.
 
 ## MVP Scope
@@ -66,8 +66,8 @@ The demo should feel like launching a real paid product.
 - Revenue ledger.
 - Split model with founder, affiliate, vendor, agent/runtime, and platform fee.
 - CSV export for revenue split report.
-- Solana mainnet settlement batch preview with no fake explorer links.
-- x402-style paid API endpoint demo.
+- Solana mainnet USDC settlement batch preview with no fake explorer links.
+- x402-style paid API endpoint demo for Agentic & Autonomous Payments.
 - README with free build path and revenue model.
 - Demo script for a 2-minute judging walkthrough.
 

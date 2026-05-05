@@ -25,7 +25,7 @@
 
 **DodoLaunch India** is an open-source hackathon product for the **Payments Track | Superteam India x Dodo Payments** at Solana Frontier.
 
-It helps Indian AI and SaaS builders package a paid product, launch checkout with Dodo Payments, track every sale, calculate revenue splits, and prepare wallet-approved Solana USDC payout batches for founders, affiliates, vendors, agents, and platform fees.
+It helps Indian AI and SaaS builders package a paid product, launch checkout with Dodo Payments, track every sale, calculate revenue splits, route agentic x402 API revenue, and prepare wallet-approved Solana USDC payout batches for founders, affiliates, vendors, agents, and platform fees.
 
 The product runs without secrets in sandbox mode, and becomes production-ready when Dodo live credentials and a wallet-approved mainnet settlement path are configured.
 
@@ -46,7 +46,7 @@ The product runs without secrets in sandbox mode, and becomes production-ready w
 | Ledger | Working browser-local revenue ledger |
 | Splits | Founder, affiliate, vendor, agent/runtime, and platform fee split model |
 | Settlement | Connected-wallet path prepares, signs, and broadcasts mainnet USDC batches |
-| x402 | Working HTTP 402 demo route for paid agent/API access |
+| Agentic payments | x402 route lets AI agents pay for API access and route USDC revenue into the same ledger |
 | Cost to build | No paid hosting, no paid database, no paid RPC, no paid AI API |
 
 ## Product
@@ -61,14 +61,14 @@ The first prototype focuses on this workflow:
 2. Dodo sale webhooks update the revenue ledger.
 3. Split rules calculate founder revenue, affiliate commissions, vendor/API costs, agent/runtime fees, and the DodoLaunch platform fee.
 4. The app prepares Solana stablecoin settlement previews for those splits; explorer links should only be shown after real mainnet broadcast.
-5. x402 demonstrates paid API access for agentic buyers.
+5. x402 demonstrates Agentic & Autonomous Payments: an AI agent receives a 402 challenge, attaches proof, gets paid access, and routes USDC revenue into the same split ledger.
 
 ## Why This Is Useful
 
-- **For founders:** ship paid products faster without building billing, affiliate splits, or revenue operations from scratch.
+- **For founders:** ship paid products faster without building billing, affiliate splits, agent payment rails, or revenue operations from scratch.
 - **For Dodo Payments:** brings new SaaS/AI merchants, checkout sessions, subscriptions, credit packs, and payment volume into Dodo.
 - **For us:** DodoLaunch can earn a platform fee on successful product revenue, shown in the demo split model.
-- **For Solana:** stablecoins become the programmable settlement layer for affiliates, vendors, API providers, and global collaborators.
+- **For Solana:** USDC becomes the programmable settlement layer for affiliates, vendors, API providers, autonomous agents, and global collaborators.
 
 ## Implemented Demo
 
@@ -79,7 +79,8 @@ The first prototype focuses on this workflow:
 - Revenue split model for founder, affiliate, vendor, agent/runtime, and platform fee.
 - Browser-generated CSV export for revenue split reports.
 - Solana mainnet USDC settlement batch preview with wallet approval and no fake explorer links.
-- x402-style HTTP 402 demo for paid agent/API access.
+- x402-style HTTP 402 demo for Agentic & Autonomous Payments.
+- Agent/API payment events settle in USDC and enter the same revenue split ledger.
 - First-time user guide inside the app.
 - Real Phantom/Solana browser wallet connect for mainnet settlement operators.
 - Real wallet-signed mainnet USDC transaction builder and broadcaster.
@@ -104,7 +105,7 @@ Use the fastest real-user path here: [MAINNET_USER_SHIP_PLAN.md](./MAINNET_USER_
 4. Replay the sale webhook to route the paid event into the ledger.
 5. Build the revenue split to see the settlement batch and platform fee.
 6. Approve the mainnet transfer flow from the settlement section when the wallet is funded.
-7. Run the x402 agent/API sale to show autonomous paid access.
+7. Run the x402 agent/API sale to show autonomous paid access and USDC revenue routing.
 8. Export the CSV split report.
 
 The product does not fake mainnet volume during judging. It shows a working product flow with honest Dodo live/test/sandbox modes and mainnet-ready Solana settlement boundaries.
