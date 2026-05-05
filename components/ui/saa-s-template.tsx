@@ -172,7 +172,7 @@ function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`h-11 rounded-lg border border-white/10 bg-black/24 px-3 text-white outline-none transition focus:border-lime/60 ${
+      className={`h-11 rounded-lg border border-white/10 bg-black/25 px-3 text-white outline-none transition focus:border-lime/60 ${
         props.className ?? ""
       }`}
     />
@@ -183,7 +183,7 @@ function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className={`min-h-24 rounded-lg border border-white/10 bg-black/24 p-3 text-white outline-none transition focus:border-lime/60 ${
+      className={`min-h-24 rounded-lg border border-white/10 bg-black/25 p-3 text-white outline-none transition focus:border-lime/60 ${
         props.className ?? ""
       }`}
     />
@@ -198,7 +198,7 @@ function StatusPill({
   children: React.ReactNode;
 }) {
   const tones = {
-    neutral: "border-white/10 bg-white/8 text-white/68",
+    neutral: "border-white/10 bg-white/[0.08] text-white/68",
     lime: "border-lime/30 bg-lime/12 text-lime",
     blue: "border-frontier/35 bg-frontier/12 text-blue-200",
   };
@@ -595,8 +595,7 @@ export default function Component() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#050705] text-white">
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_12%_10%,rgba(216,241,106,0.13),transparent_28%),radial-gradient(circle_at_88%_0%,rgba(40,87,232,0.16),transparent_24%),linear-gradient(145deg,#050705_0%,#0c130f_48%,#040604_100%)]" />
+    <main className="min-h-screen bg-[#050705] bg-[linear-gradient(180deg,#050705_0%,#09100c_48%,#050705_100%)] text-white">
 
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050705]/88 backdrop-blur-xl">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
@@ -608,19 +607,16 @@ export default function Component() {
             </span>
           </button>
 
-          <div className="hidden items-center rounded-lg border border-white/10 bg-white/[0.045] p-1 md:flex">
-            {workspaceViews.map((view) => (
-              <button
-                className={`rounded-md px-3 py-2 text-sm font-semibold transition ${
-                  activeView === view.id ? "bg-lime text-ink" : "text-white/58 hover:bg-white/8 hover:text-white"
-                }`}
-                key={view.id}
-                type="button"
-                onClick={() => selectView(view.id)}
-              >
-                {view.label}
-              </button>
-            ))}
+          <div className="hidden items-center gap-2 md:flex">
+            <button className="rounded-lg px-3 py-2 text-sm font-semibold text-white/58 transition hover:bg-white/[0.08] hover:text-white" type="button" onClick={() => goToWorkspace("checkout")}>
+              Checkout
+            </button>
+            <button className="rounded-lg px-3 py-2 text-sm font-semibold text-white/58 transition hover:bg-white/[0.08] hover:text-white" type="button" onClick={() => goToWorkspace("ledger")}>
+              Ledger
+            </button>
+            <button className="rounded-lg px-3 py-2 text-sm font-semibold text-white/58 transition hover:bg-white/[0.08] hover:text-white" type="button" onClick={() => goToWorkspace("settlement")}>
+              Settlement
+            </button>
           </div>
 
           <div className="flex items-center gap-2">
@@ -661,23 +657,23 @@ export default function Component() {
         ) : null}
       </header>
 
-      <section className="mx-auto grid min-h-[720px] max-w-7xl items-center gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="mx-auto grid min-h-[calc(100vh-64px)] max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <div className="mb-6 flex flex-wrap gap-2">
             <StatusPill tone="lime">Dodo Payments</StatusPill>
             <StatusPill tone="blue">Solana mainnet</StatusPill>
-            <StatusPill>Wallet approval</StatusPill>
+            <StatusPill>USDC settlement</StatusPill>
           </div>
-          <h1 className="max-w-3xl text-6xl font-semibold leading-[0.92] tracking-normal text-white sm:text-7xl lg:text-8xl">
-            DodoLaunch India
+          <h1 className="max-w-3xl text-5xl font-semibold leading-[0.95] tracking-normal text-white sm:text-7xl lg:text-8xl">
+            Revenue OS for AI founders.
           </h1>
-          <p className="mt-6 max-w-2xl text-base leading-7 text-white/62 sm:text-lg">
-            A sleek revenue workspace for Indian AI and SaaS founders: sell with Dodo, route every paid event,
-            split revenue with partners, and prepare Solana settlement when the team is ready.
+          <p className="mt-6 max-w-2xl text-base leading-7 text-white/64 sm:text-lg">
+            DodoLaunch India turns a Dodo checkout into a live revenue ledger, partner split, CSV report,
+            and wallet-approved Solana USDC settlement flow.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button type="button" variant="gradient" size="lg" onClick={() => goToWorkspace("launch")}>
-              Go to app <ArrowRight className="size-4" />
+              Open console <ArrowRight className="size-4" />
             </Button>
             <Button type="button" variant="secondary" size="lg" onClick={createCheckout} disabled={busyAction !== null}>
               {busyAction === "checkout" ? "Creating..." : "Create checkout"}
@@ -690,115 +686,87 @@ export default function Component() {
           <p className="mt-5 max-w-xl text-sm font-medium text-white/48">{message}</p>
         </div>
 
-        <ShellCard className="p-4 sm:p-5">
-          <div className="mb-4 flex items-start justify-between gap-4">
+        <section className="rounded-lg border border-white/10 bg-[#09110d]/92 p-4 shadow-[0_32px_110px_rgba(0,0,0,0.34)] sm:p-5">
+          <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
             <div>
-              <Label>Workspace health</Label>
-              <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-4xl">Payments In, Splits Out</h2>
+              <Label>Live operating board</Label>
+              <h2 className="mt-2 text-3xl font-semibold leading-tight">Payments in. USDC out.</h2>
             </div>
             <span className="grid size-11 place-items-center rounded-lg bg-lime text-ink">
               <Zap className="size-5" />
             </span>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {[
-              ["Revenue tracked", formatMoney(totalRevenue)],
+              ["Tracked revenue", formatMoney(totalRevenue, productConfig.currency)],
               ["Dodo events", String(state.dodoEvents.length)],
-              ["Split rules", `${recipients.reduce((sum, item) => sum + item.splitBps, 0) / 100}% Routed`],
+              ["Split coverage", `${recipients.reduce((sum, item) => sum + item.splitBps, 0) / 100}%`],
               ["Settlement", latestBatch?.executionStatus === "broadcasted" ? "Broadcasted" : "Ready"],
             ].map(([label, value]) => (
-              <div className="rounded-lg border border-white/10 bg-black/24 p-4" key={label}>
+              <div className="rounded-lg border border-white/10 bg-black/25 p-4" key={label}>
                 <Label>{label}</Label>
                 <strong className="mt-2 block text-2xl text-white">{value}</strong>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 rounded-lg border border-white/10 bg-lime/[0.08] p-4">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <Label>Active product</Label>
-              <StatusPill tone={walletAddress ? "blue" : "lime"}>
-                {walletAddress ? "Wallet connected" : "Wallet required"}
-              </StatusPill>
+          <div className="mt-4 grid gap-3 rounded-lg border border-lime/20 bg-lime/[0.08] p-4">
+            <div className="flex items-center justify-between gap-3">
+              <Label>Active launch</Label>
+              <StatusPill tone={walletAddress ? "blue" : "lime"}>{walletAddress ? "Wallet connected" : "Wallet needed"}</StatusPill>
             </div>
             <strong className="block text-xl">{heroProductName}</strong>
-            <p className="mt-2 text-sm leading-6 text-white/55">{productConfig.launchNote}</p>
+            <p className="text-sm leading-6 text-white/58">{productConfig.launchNote}</p>
           </div>
-        </ShellCard>
-      </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-6 sm:px-6">
-        <div className="grid gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-3 sm:grid-cols-5">
-          {workspaceViews.map((view, index) => {
-            const Icon = view.icon;
-            return (
-              <button
-                key={view.id}
-                type="button"
-                onClick={() => goToWorkspace(view.id)}
-                className={`group grid min-h-24 gap-3 rounded-lg border p-4 text-left transition ${
-                  activeView === view.id
-                    ? "border-lime/50 bg-lime text-ink"
-                    : "border-white/10 bg-black/20 text-white hover:border-white/20 hover:bg-white/8"
-                }`}
-              >
-                <span className="flex items-center justify-between gap-3">
-                  <Icon className="size-5" />
-                  <span className={`text-xs font-black ${activeView === view.id ? "text-ink/55" : "text-white/35"}`}>
-                    0{index + 1}
-                  </span>
-                </span>
+          <div className="mt-4 grid gap-3">
+            {[
+              ["1", "Create paid Dodo checkout", latestCheckout ? "Session ready" : "Needs checkout"],
+              ["2", "Record successful sale", state.settlementEntries.length ? "Ledger active" : "Awaiting sale"],
+              ["3", "Approve USDC payout", mainnetTx.status === "broadcasted" ? "Proof live" : "Wallet approval"],
+            ].map(([index, title, detail]) => (
+              <div className="grid grid-cols-[34px_1fr] items-center gap-3 rounded-lg border border-white/10 bg-black/25 p-3" key={title}>
+                <span className="grid size-8 place-items-center rounded-md bg-white/10 text-xs font-black text-lime">{index}</span>
                 <span>
-                  <strong className="block text-sm">{view.label}</strong>
-                  <span className={`mt-1 block text-xs leading-5 ${activeView === view.id ? "text-ink/62" : "text-white/42"}`}>
-                    {view.description}
-                  </span>
+                  <strong className="block text-sm">{title}</strong>
+                  <span className="text-xs text-white/45">{detail}</span>
                 </span>
-              </button>
-            );
-          })}
-        </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6" id="workspace">
-        <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
-          <aside className="rounded-lg border border-white/10 bg-white/[0.04] p-3 lg:sticky lg:top-20 lg:self-start">
-            <div className="mb-3 px-2">
+        <div className="rounded-lg border border-white/10 bg-[#070b08]/92 p-3 shadow-[0_30px_120px_rgba(0,0,0,0.34)] sm:p-4">
+          <div className="grid gap-4 border-b border-white/10 pb-4 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div>
               <Label>Product console</Label>
-              <h2 className="mt-2 text-xl font-semibold">{activeViewMeta.label}</h2>
-              <p className="mt-1 text-sm leading-6 text-white/48">{activeViewMeta.description}</p>
+              <h2 className="mt-2 text-3xl font-semibold">{activeViewMeta.label}</h2>
+              <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">{activeViewMeta.description}</p>
             </div>
-            <div className="grid gap-2">
+            <div className="flex gap-2 overflow-x-auto rounded-lg border border-white/10 bg-black/20 p-1">
               {workspaceViews.map((view) => {
                 const Icon = view.icon;
                 return (
                   <button
-                    className={`grid grid-cols-[36px_1fr] items-center gap-3 rounded-lg p-3 text-left transition ${
-                      activeView === view.id
-                        ? "bg-lime text-ink"
-                        : "border border-white/8 bg-black/18 text-white/70 hover:bg-white/8 hover:text-white"
+                    className={`inline-flex min-w-max items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition ${
+                      activeView === view.id ? "bg-lime text-ink" : "text-white/58 hover:bg-white/[0.08] hover:text-white"
                     }`}
                     key={view.id}
                     type="button"
                     onClick={() => selectView(view.id)}
                   >
-                    <span className="grid size-9 place-items-center rounded-md bg-current/10">
-                      <Icon className="size-4" />
-                    </span>
-                    <span>
-                      <strong className="block text-sm">{view.label}</strong>
-                      <span className={`text-xs ${activeView === view.id ? "text-ink/62" : "text-white/38"}`}>
-                        {view.description}
-                      </span>
-                    </span>
+                    <Icon className="size-4" />
+                    {view.label}
                   </button>
                 );
               })}
             </div>
-          </aside>
+          </div>
 
-          <div className="min-h-[680px] rounded-lg border border-white/10 bg-[#080b08]/88 p-4 shadow-[0_30px_120px_rgba(0,0,0,0.36)] sm:p-5">
+          <div className="min-h-[620px] pt-4">
             {activeView === "launch" ? (
               <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
                 <ShellCard>
@@ -849,7 +817,7 @@ export default function Component() {
                       ["Vendor", "10%"],
                       ["Agent + platform", "10%"],
                     ].map(([label, value]) => (
-                      <div className="rounded-lg border border-white/10 bg-black/24 p-4" key={label}>
+                      <div className="rounded-lg border border-white/10 bg-black/25 p-4" key={label}>
                         <Label>{label}</Label>
                         <strong className="mt-2 block text-2xl">{value}</strong>
                       </div>
@@ -894,22 +862,22 @@ export default function Component() {
                     </div>
                     <CreditCard className="size-6 text-lime" />
                   </div>
-                  <div className="rounded-lg border border-white/10 bg-black/24 p-4">
+                  <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                     <Label>Payment link</Label>
                     <p className="mt-2 break-words text-sm leading-6 text-white/64">
                       {latestCheckout?.checkoutUrl ?? "Create a checkout session to generate a buyer-facing payment link."}
                     </p>
                   </div>
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-lg border border-white/10 bg-black/24 p-4">
+                    <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                       <Label>Buyer</Label>
                       <strong className="mt-2 block">{latestCheckout?.customer ?? productConfig.customerName}</strong>
                     </div>
-                    <div className="rounded-lg border border-white/10 bg-black/24 p-4">
+                    <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                       <Label>Product</Label>
                       <strong className="mt-2 block">{latestCheckout?.productName ?? productConfig.productName}</strong>
                     </div>
-                    <div className="rounded-lg border border-white/10 bg-black/24 p-4">
+                    <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                       <Label>Amount</Label>
                       <strong className="mt-2 block">
                         {latestCheckout ? formatMoney(latestCheckout.amount.amount, latestCheckout.amount.currency) : formatMoney(productConfig.amount, productConfig.currency)}
@@ -936,7 +904,7 @@ export default function Component() {
                         className={`grid gap-2 rounded-lg border p-4 text-left transition sm:grid-cols-[72px_1fr_auto] ${
                           entry.id === selectedSettlement.id
                             ? "border-lime/50 bg-lime/[0.1]"
-                            : "border-white/10 bg-black/24 hover:bg-white/8"
+                            : "border-white/10 bg-black/25 hover:bg-white/[0.08]"
                         }`}
                         key={entry.id}
                         type="button"
@@ -965,7 +933,7 @@ export default function Component() {
                   </div>
                   <div className="grid gap-3">
                     {splitPreview.map((recipient) => (
-                      <div className="grid gap-3 rounded-lg border border-white/10 bg-black/24 p-4 sm:grid-cols-[1fr_auto]" key={recipient.id}>
+                      <div className="grid gap-3 rounded-lg border border-white/10 bg-black/25 p-4 sm:grid-cols-[1fr_auto]" key={recipient.id}>
                         <span>
                           <strong className="block">{recipient.name}</strong>
                           <span className="text-sm text-white/42">
@@ -1006,7 +974,7 @@ export default function Component() {
                   </div>
                   <div className="mt-5 grid gap-2">
                     {transactionSteps.map(([index, title, detail]) => (
-                      <div className="grid grid-cols-[34px_1fr] items-center gap-3 rounded-lg border border-white/10 bg-black/24 p-3" key={title}>
+                      <div className="grid grid-cols-[34px_1fr] items-center gap-3 rounded-lg border border-white/10 bg-black/25 p-3" key={title}>
                         <span className="grid size-8 place-items-center rounded-md bg-lime text-xs font-black text-ink">{index}</span>
                         <span>
                           <strong className="block text-sm">{title}</strong>
@@ -1017,7 +985,7 @@ export default function Component() {
                   </div>
                   {walletPanelOpen || walletAddress || walletError ? (
                     <div className="mt-5 grid gap-3">
-                      <div className="rounded-lg border border-white/10 bg-black/24 p-4">
+                      <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                         <Label>Wallet status</Label>
                         <strong className="mt-2 block break-all text-white">
                           {walletAddress || "Wallet connection pending"}
@@ -1041,7 +1009,7 @@ export default function Component() {
                         ) : null}
                       </div>
                       {productionWalletSteps.map((step) => (
-                        <div className="flex gap-3 rounded-lg border border-white/10 bg-black/24 p-3" key={step}>
+                        <div className="flex gap-3 rounded-lg border border-white/10 bg-black/25 p-3" key={step}>
                           <Check className="mt-0.5 size-4 shrink-0 text-lime" />
                           <span className="text-sm leading-6 text-white/58">{step}</span>
                         </div>
@@ -1084,7 +1052,7 @@ export default function Component() {
                         ) : null}
                       </div>
                       {latestBatch.lines.map((line, index) => (
-                        <div className="grid gap-2 rounded-lg border border-white/10 bg-black/24 p-4 sm:grid-cols-[1fr_auto]" key={line.id}>
+                        <div className="grid gap-2 rounded-lg border border-white/10 bg-black/25 p-4 sm:grid-cols-[1fr_auto]" key={line.id}>
                           <span>
                             <strong className="block">{line.name}</strong>
                             <span className="text-sm text-white/42">{latestBatch.previewIds[index]}</span>
@@ -1094,7 +1062,7 @@ export default function Component() {
                       ))}
                     </div>
                   ) : (
-                    <div className="rounded-lg border border-white/10 bg-black/24 p-5 text-sm leading-6 text-white/56">
+                    <div className="rounded-lg border border-white/10 bg-black/25 p-5 text-sm leading-6 text-white/56">
                       Select a ledger entry and prepare a batch. The output remains clearly labeled until a wallet-approved mainnet broadcast is available.
                     </div>
                   )}
