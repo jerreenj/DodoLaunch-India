@@ -15,7 +15,7 @@ export function paymentRequiredResponse() {
       },
     ],
     zeroDollar: false,
-    message: "x402 payment proof required before paid agent data is released.",
+    message: "x402 payment proof required before the autonomous agent can access paid API data.",
   };
 }
 
@@ -28,7 +28,7 @@ export function createX402Event(): X402Event {
     source: "x402",
     type: "x402.payment.settled",
     buyer: "Autonomous support agent",
-    resource: "Paid API call: support-agent answer pack",
+    resource: "Agentic API payment: support-agent answer pack",
     amount: { amount: 2.4, currency: "USDC" },
     proof,
     receivedAt: now,
