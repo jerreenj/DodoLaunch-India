@@ -2,7 +2,7 @@
 
 # DodoLaunch India
 
-### Launch paid AI products with Dodo. Route revenue splits with mainnet-ready Solana settlement.
+### Sell globally with Dodo. Split revenue in USDC on Solana.
 
 <p>
   <a href="https://dodolaunch-india.vercel.app"><img alt="Live app" src="https://img.shields.io/badge/LIVE_APP-DODOLAUNCH-111111?style=for-the-badge&logo=vercel&logoColor=white"></a>
@@ -25,7 +25,7 @@
 
 **DodoLaunch India** is an open-source hackathon product for the **Payments Track | Superteam India x Dodo Payments** at Solana Frontier.
 
-It helps Indian AI and SaaS builders package a paid product, launch checkout with Dodo Payments, track every sale, calculate revenue splits, and prepare mainnet-ready Solana settlement batches for founders, affiliates, vendors, agents, and platform fees.
+It helps Indian AI and SaaS builders package a paid product, launch checkout with Dodo Payments, track every sale, calculate revenue splits, and prepare wallet-approved Solana USDC payout batches for founders, affiliates, vendors, agents, and platform fees.
 
 The product runs without secrets in sandbox mode, and becomes production-ready when Dodo live credentials and a wallet-approved mainnet settlement path are configured.
 
