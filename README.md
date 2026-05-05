@@ -94,6 +94,7 @@ See the full hackathon plan: [HACKATHON_WIN_PLAN.md](./HACKATHON_WIN_PLAN.md).
 Use the final checklist before submission: [SUBMISSION_SWEEP.md](./SUBMISSION_SWEEP.md).
 Use the mainnet approval checklist before moving real funds: [MAINNET_OPERATOR_CHECKLIST.md](./MAINNET_OPERATOR_CHECKLIST.md).
 Use the user rollout script before sending to 20 and then 200 testers: [PILOT_ROLLOUT.md](./PILOT_ROLLOUT.md).
+Use the fastest real-user path here: [MAINNET_USER_SHIP_PLAN.md](./MAINNET_USER_SHIP_PLAN.md).
 
 ## Judge Demo Script
 
