@@ -20,7 +20,8 @@ export type DodoCheckout = {
   zeroDollar: boolean;
 };
 
-export type ProductConfig = {
+export type Product = {
+  id: string;
   founderName: string;
   productName: string;
   customerName: string;
@@ -30,11 +31,14 @@ export type ProductConfig = {
   launchNote: string;
 };
 
+export type ProductConfig = Product;
+
 export type DodoPaymentEvent = {
   id: string;
   source: "dodo";
   type: "payment.succeeded" | "subscription.active";
   checkoutSessionId: string;
+  productId: string;
   customer: string;
   productName: string;
   amount: Money;
@@ -47,6 +51,7 @@ export type X402Event = {
   source: "x402";
   type: "x402.payment.settled";
   buyer: string;
+  productId: string;
   resource: string;
   amount: Money;
   proof: string;
@@ -56,6 +61,7 @@ export type X402Event = {
 export type SettlementEntry = {
   id: string;
   sourceEventId: string;
+  productId: string;
   source: "dodo" | "x402";
   label: string;
   payer: string;
@@ -74,6 +80,8 @@ export type Recipient = {
   wallet: string;
   splitBps: number;
 };
+
+export type RecipientRoleWithProduct = Recipient & { productId: string };
 
 export type PayoutLine = Recipient & {
   amount: Money;
@@ -103,9 +111,12 @@ export type MainnetTransactionStatus = {
 };
 
 export type DemoState = {
+  products: Product[];
+  activeProductId: string;
   checkouts: DodoCheckout[];
   dodoEvents: DodoPaymentEvent[];
   x402Events: X402Event[];
   settlementEntries: SettlementEntry[];
   payoutBatches: PayoutBatch[];
+  recipientRules: RecipientRoleWithProduct[];
 };

@@ -19,7 +19,7 @@ export function paymentRequiredResponse() {
   };
 }
 
-export function createX402Event(): X402Event {
+export function createX402Event(productId = ""): X402Event {
   const now = new Date().toISOString();
   const proof = crypto.createHash("sha256").update(`x402:${now}`).digest("hex");
 
@@ -28,6 +28,7 @@ export function createX402Event(): X402Event {
     source: "x402",
     type: "x402.payment.settled",
     buyer: "Autonomous support agent",
+    productId,
     resource: "Agentic API payment: support-agent answer pack",
     amount: { amount: 2.4, currency: "USDC" },
     proof,

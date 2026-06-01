@@ -64,7 +64,7 @@ export async function createDodoCheckout(input: CheckoutInput = {}): Promise<Dod
   };
 }
 
-export function createDemoDodoEvent(checkout?: DodoCheckout): DodoPaymentEvent {
+export function createDemoDodoEvent(checkout?: DodoCheckout, productId = ""): DodoPaymentEvent {
   const base = checkout ?? {
     sessionId: "cks_demo_seeded",
     productName: merchant.product,
@@ -78,6 +78,7 @@ export function createDemoDodoEvent(checkout?: DodoCheckout): DodoPaymentEvent {
     source: "dodo",
     type: "payment.succeeded",
     checkoutSessionId: base.sessionId,
+    productId,
     customer: base.customer,
     productName: base.productName,
     amount: base.amount,

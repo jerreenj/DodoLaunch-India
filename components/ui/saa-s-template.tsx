@@ -10,12 +10,14 @@ import {
   FileDown,
   Globe2,
   Network,
+  Plus,
   RefreshCw,
   Sparkles,
+  Trash2,
   Wallet,
   Zap,
 } from "lucide-react";
-import { defaultProductConfig, initialDemoState, recipients } from "@/lib/demo-data";
+import { defaultProducts, initialDemoState, initialRecipientRules } from "@/lib/demo-data";
 import { formatMoney, totalSettlement } from "@/lib/settlement";
 import type {
   DemoState,
@@ -23,7 +25,7 @@ import type {
   DodoPaymentEvent,
   MainnetTransactionStatus,
   PayoutBatch,
-  ProductConfig,
+  Product,
   SettlementEntry,
   X402Event,
 } from "@/lib/types";
@@ -82,7 +84,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 const storageKey = "dodolaunch-demo-state";
-const productStorageKey = "dodolaunch-product-config";
 
 const workspaceViews: Array<{
   id: WorkspaceView;
@@ -236,7 +237,8 @@ function titleCase(value: string) {
 export default function Component() {
   const [state, setState] = React.useState<DemoState>(initialDemoState);
   const [selectedSettlementId, setSelectedSettlementId] = React.useState(initialDemoState.settlementEntries[0].id);
-  const [productConfig, setProductConfig] = React.useState<ProductConfig>(defaultProductConfig);
+  const [showProductManager, setShowProductManager] = React.useState(false);
+  const [newProductName, setNewProductName] = React.useState("");
   const [walletPanelOpen, setWalletPanelOpen] = React.useState(false);
   const [activeView, setActiveView] = React.useState<WorkspaceView>("launch");
   const [busyAction, setBusyAction] = React.useState<string | null>(null);
@@ -247,6 +249,8 @@ export default function Component() {
   const [walletConnecting, setWalletConnecting] = React.useState(false);
   const [mainnetTx, setMainnetTx] = React.useState<MainnetTransactionStatus>({ status: "idle" });
 
+  const activeProduct = state.products.find((p) => p.id === state.activeProductId) ?? state.products[0];
+
   React.useEffect(() => {
     try {
       const saved = window.localStorage.getItem(storageKey);
@@ -254,43 +258,41 @@ export default function Component() {
         const parsed = JSON.parse(saved) as DemoState;
         const migrated: DemoState = {
           ...parsed,
-          checkouts: parsed.checkouts.map((checkout) => ({
+          products: parsed.products?.length ? parsed.products : defaultProducts,
+          activeProductId: parsed.activeProductId ?? parsed.products?.[0]?.id ?? defaultProducts[0].id,
+          recipientRules: parsed.recipientRules?.length ? parsed.recipientRules : initialRecipientRules,
+          checkouts: parsed.checkouts?.map((checkout) => ({
             ...checkout,
             amount: { ...checkout.amount, currency: "USDC" },
-          })),
-          dodoEvents: parsed.dodoEvents.map((event) => ({
+          })) ?? [],
+          dodoEvents: parsed.dodoEvents?.map((event) => ({
             ...event,
             amount: { ...event.amount, currency: "USDC" },
-          })),
-          x402Events: parsed.x402Events.map((event) => ({
+          })) ?? [],
+          x402Events: parsed.x402Events?.map((event) => ({
             ...event,
             amount: { ...event.amount, currency: "USDC" },
-          })),
-          settlementEntries: parsed.settlementEntries.map((entry) => ({
+          })) ?? [],
+          settlementEntries: parsed.settlementEntries?.map((entry) => ({
             ...entry,
             amount: { ...entry.amount, currency: "USDC" },
-          })),
-          payoutBatches: parsed.payoutBatches.map((batch) => ({
+          })) ?? [initialDemoState.settlementEntries[0]],
+          payoutBatches: parsed.payoutBatches?.map((batch) => ({
             ...batch,
             total: { ...batch.total, currency: "USDC" },
             lines: batch.lines.map((line) => ({
               ...line,
               amount: { ...line.amount, currency: "USDC" },
             })),
-          })),
+          })) ?? [],
         };
         setState(migrated);
-        setSelectedSettlementId(parsed.settlementEntries[0]?.id ?? initialDemoState.settlementEntries[0].id);
-      }
-
-      const savedProduct = window.localStorage.getItem(productStorageKey);
-      if (savedProduct) {
-        const parsedProduct = JSON.parse(savedProduct) as ProductConfig;
-        setProductConfig({ ...parsedProduct, currency: "USDC" });
+        setSelectedSettlementId(
+          migrated.settlementEntries[0]?.id ?? initialDemoState.settlementEntries[0].id,
+        );
       }
     } catch {
       window.localStorage.removeItem(storageKey);
-      window.localStorage.removeItem(productStorageKey);
       setMessage("Workspace reset after invalid saved browser state.");
     }
   }, []);
@@ -298,10 +300,6 @@ export default function Component() {
   React.useEffect(() => {
     window.localStorage.setItem(storageKey, JSON.stringify(state));
   }, [state]);
-
-  React.useEffect(() => {
-    window.localStorage.setItem(productStorageKey, JSON.stringify(productConfig));
-  }, [productConfig]);
 
   React.useEffect(() => {
     const provider = getSolanaProvider();
@@ -324,18 +322,70 @@ export default function Component() {
     state.settlementEntries.find((entry) => entry.id === selectedSettlementId) ?? state.settlementEntries[0];
   const latestBatch = state.payoutBatches[0];
   const latestCheckout = state.checkouts[0];
-  const totalRevenue = React.useMemo(() => totalSettlement(state.settlementEntries), [state.settlementEntries]);
+  const productSettlements = state.settlementEntries.filter((e) => e.productId === activeProduct?.id);
+  const totalRevenue = React.useMemo(() => totalSettlement(productSettlements), [productSettlements]);
   const splitPreview = React.useMemo(
     () =>
-      recipients.map((recipient) => ({
-        ...recipient,
-        amount: Number(((productConfig.amount * recipient.splitBps) / 10000).toFixed(2)),
-      })),
-    [productConfig.amount],
+      (initialRecipientRules)
+        .filter((recipient) => recipient.productId === state.activeProductId)
+        .map((recipient) => ({
+          ...recipient,
+          amount: Number(((activeProduct?.amount ?? 0 * recipient.splitBps) / 10000).toFixed(2)),
+        })),
+    [activeProduct?.amount, state.activeProductId],
   );
 
-  function updateProduct<K extends keyof ProductConfig>(key: K, value: ProductConfig[K]) {
-    setProductConfig((current) => ({ ...current, [key]: value }));
+  function updateProduct<K extends keyof Product>(key: K, value: Product[K]) {
+    setState((current) => ({
+      ...current,
+      products: current.products.map((p) =>
+        p.id === current.activeProductId ? { ...p, [key]: value } : p
+      ),
+    }));
+  }
+
+  function createNewProduct() {
+    if (!newProductName.trim()) return;
+    const id = `prod_${Math.random().toString(36).slice(2, 10)}`;
+    const newProduct: Product = {
+      id,
+      founderName: "New Founder",
+      productName: newProductName.trim(),
+      customerName: "New Customer",
+      amount: 100,
+      currency: "USDC",
+      productUrl: "",
+      launchNote: "",
+    };
+    const newRecipientRules = initialRecipientRules
+      .filter((r) => r.productId === defaultProducts[0].id)
+      .map((r) => ({ ...r, productId: id }));
+    setState((current) => ({
+      ...current,
+      products: [...current.products, newProduct],
+      activeProductId: id,
+      recipientRules: [...current.recipientRules, ...newRecipientRules],
+    }));
+    setNewProductName("");
+    setShowProductManager(false);
+    setMessage(`Product "${newProductName}" created. Switch between products anytime.`);
+  }
+
+  function deleteProduct(productId: string) {
+    if (state.products.length <= 1) {
+      setMessage("Cannot delete the last product. Create a new one first.");
+      return;
+    }
+    setState((current) => {
+      const remaining = current.products.filter((p) => p.id !== productId);
+      return {
+        ...current,
+        products: remaining,
+        activeProductId: remaining[0].id,
+        recipientRules: current.recipientRules.filter((r) => r.productId !== productId),
+      };
+    });
+    setMessage("Product deleted.");
   }
 
   async function runAction<T>(name: string, action: () => Promise<T>) {
@@ -353,9 +403,9 @@ export default function Component() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          productName: productConfig.productName,
-          customer: productConfig.customerName,
-          amount: productConfig.amount,
+          productName: activeProduct?.productName,
+          customer: activeProduct?.customerName,
+          amount: activeProduct?.amount,
         }),
       });
       const data = (await response.json()) as { checkout: DodoCheckout; message: string };
@@ -383,10 +433,12 @@ export default function Component() {
         settlementEntry: SettlementEntry;
         message: string;
       };
+      const eventWithProduct = { ...data.event, productId: activeProduct?.id ?? "" };
+      const settlementWithProduct = { ...data.settlementEntry, productId: activeProduct?.id ?? "" };
       setState((current) => ({
         ...current,
-        dodoEvents: [data.event, ...current.dodoEvents],
-        settlementEntries: [data.settlementEntry, ...current.settlementEntries],
+        dodoEvents: [eventWithProduct, ...current.dodoEvents],
+        settlementEntries: [settlementWithProduct, ...current.settlementEntries],
       }));
       setSelectedSettlementId(data.settlementEntry.id);
       setMessage(data.message.replaceAll("demo", "sandbox"));
@@ -429,10 +481,12 @@ export default function Component() {
         settlementEntry: SettlementEntry;
         message: string;
       };
+      const eventWithProduct = { ...data.event, productId: activeProduct?.id ?? "" };
+      const settlementWithProduct = { ...data.settlementEntry, productId: activeProduct?.id ?? "" };
       setState((current) => ({
         ...current,
-        x402Events: [data.event, ...current.x402Events],
-        settlementEntries: [data.settlementEntry, ...current.settlementEntries],
+        x402Events: [eventWithProduct, ...current.x402Events],
+        settlementEntries: [settlementWithProduct, ...current.settlementEntries],
       }));
       setSelectedSettlementId(data.settlementEntry.id);
       setMessage(data.message.replaceAll("demo", "sandbox"));
@@ -569,20 +623,21 @@ export default function Component() {
   }
 
   function saveLaunchKit() {
-    setMessage(`${productConfig.productName} launch kit saved in this browser.`);
+    setMessage(`${activeProduct?.productName} launch kit saved in this browser.`);
   }
 
   function exportSplitCsv() {
+    if (!activeProduct) return;
     const rows = [
       ["product", "recipient", "role", "region", "split_percent", "amount", "currency", "wallet"],
       ...splitPreview.map((row) => [
-        productConfig.productName,
+        activeProduct.productName,
         row.name,
         titleCase(row.role),
         titleCase(row.region),
         String(row.splitBps / 100),
         row.amount.toFixed(2),
-        productConfig.currency,
+        activeProduct.currency,
         row.wallet,
       ]),
     ];
@@ -600,7 +655,7 @@ export default function Component() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${productConfig.productName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-split-report.csv`;
+    link.download = `${activeProduct.productName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-split-report.csv`;
     link.click();
     URL.revokeObjectURL(url);
     setMessage("Split CSV exported from the current workspace.");
@@ -618,7 +673,10 @@ export default function Component() {
   }
 
   const activeViewMeta = workspaceViews.find((view) => view.id === activeView) ?? workspaceViews[0];
-  const heroProductName = productConfig.productName.replace("SupportAgent", "Support Agent");
+  const heroProductName = activeProduct?.productName.replace("SupportAgent", "Support Agent") ?? "Product";
+  const splitCoverage = initialRecipientRules
+    .filter((r) => r.productId === state.activeProductId)
+    .reduce((sum, item) => sum + item.splitBps, 0) / 100;
   const transactionSteps = [
     ["1", "Ledger", selectedSettlement ? "Revenue selected" : "Select revenue"],
     ["2", "Batch", latestBatch ? `${latestBatch.lines.length} payout lines` : "Prepare mainnet batch"],
@@ -689,9 +747,9 @@ export default function Component() {
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {[
-              ["Tracked revenue", formatMoney(totalRevenue, productConfig.currency)],
+              ["Tracked revenue", formatMoney(totalRevenue, activeProduct?.currency ?? "USDC")],
               ["Dodo events", String(state.dodoEvents.length)],
-              ["Split coverage", `${recipients.reduce((sum, item) => sum + item.splitBps, 0) / 100}%`],
+              ["Split coverage", `${splitCoverage}%`],
               ["Settlement", latestBatch?.executionStatus === "broadcasted" ? "Broadcasted" : "Ready"],
             ].map(([label, value]) => (
               <div className="rounded-lg border border-white/10 bg-black/25 p-4" key={label}>
@@ -707,7 +765,7 @@ export default function Component() {
               <StatusPill tone={walletAddress ? "blue" : "neutral"}>{walletAddress ? "Wallet connected" : "Wallet needed"}</StatusPill>
             </div>
             <strong className="block text-xl">{heroProductName}</strong>
-            <p className="text-sm leading-6 text-white/58">{productConfig.launchNote}</p>
+            <p className="text-sm leading-6 text-white/58">{activeProduct?.launchNote}</p>
           </div>
 
           <div className="mt-4 grid gap-3">
@@ -731,11 +789,26 @@ export default function Component() {
 
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6" id="workspace">
         <div className="rounded-lg border border-white/10 bg-[#070b08]/92 p-3 shadow-[0_30px_120px_rgba(0,0,0,0.34)] sm:p-4">
-          <div className="grid gap-4 border-b border-white/10 pb-4 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div>
-              <Label>Product console</Label>
-              <h2 className="mt-2 text-3xl font-semibold">{activeViewMeta.label}</h2>
-              <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">{activeViewMeta.description}</p>
+
+          <div className="grid gap-3 border-b border-white/10 pb-4 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="flex flex-wrap items-center gap-3">
+              <Label>Product</Label>
+              <div className="flex flex-wrap items-center gap-2">
+                <select
+                  className="h-10 rounded-lg border border-white/10 bg-black/40 px-3 text-sm text-white outline-none focus:border-dodo/70"
+                  value={state.activeProductId}
+                  onChange={(e) => setState((current) => ({ ...current, activeProductId: e.target.value }))}
+                >
+                  {state.products.map((p) => (
+                    <option key={p.id} value={p.id} className="bg-[#050705] text-white">
+                      {p.productName} ({formatMoney(p.amount, p.currency)})
+                    </option>
+                  ))}
+                </select>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShowProductManager(!showProductManager)}>
+                  <Plus className="size-4" /> Manage
+                </Button>
+              </div>
             </div>
             <div className="flex gap-2 overflow-x-auto rounded-lg border border-white/10 bg-black/20 p-1">
               {workspaceViews.map((view) => {
@@ -757,6 +830,63 @@ export default function Component() {
             </div>
           </div>
 
+          {showProductManager && (
+            <div className="mt-4 rounded-lg border border-dodo/30 bg-dodo/[0.08] p-4">
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <h3 className="text-lg font-semibold">Manage Products</h3>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShowProductManager(false)}>
+                  Close
+                </Button>
+              </div>
+              <div className="mb-4 flex gap-2">
+                <TextInput
+                  placeholder="New product name..."
+                  value={newProductName}
+                  onChange={(e) => setNewProductName(e.target.value)}
+                  className="flex-1"
+                  onKeyDown={(e) => e.key === "Enter" && createNewProduct()}
+                />
+                <Button type="button" variant="default" size="sm" onClick={createNewProduct} disabled={!newProductName.trim()}>
+                  <Plus className="size-4" /> Create
+                </Button>
+              </div>
+              <div className="grid gap-2">
+                {state.products.map((p) => (
+                  <div
+                    className={`flex items-center justify-between gap-3 rounded-lg border p-3 ${
+                      p.id === state.activeProductId ? "border-dodo/55 bg-dodo/[0.14]" : "border-white/10 bg-black/25"
+                    }`}
+                    key={p.id}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <strong className="block text-sm">{p.productName}</strong>
+                      <span className="text-xs text-white/45">{p.founderName} / {formatMoney(p.amount, p.currency)}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setState((current) => ({ ...current, activeProductId: p.id }))}
+                      >
+                        Switch
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteProduct(p.id)}
+                        disabled={state.products.length <= 1}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="min-h-[620px] pt-4">
             {activeView === "launch" ? (
               <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
@@ -772,34 +902,34 @@ export default function Component() {
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field label="Founder / Company">
-                      <TextInput value={productConfig.founderName} onChange={(event) => updateProduct("founderName", event.target.value)} />
+                      <TextInput value={activeProduct?.founderName ?? ""} onChange={(event) => updateProduct("founderName", event.target.value)} />
                     </Field>
                     <Field label="Product name">
-                      <TextInput value={productConfig.productName} onChange={(event) => updateProduct("productName", event.target.value)} />
+                      <TextInput value={activeProduct?.productName ?? ""} onChange={(event) => updateProduct("productName", event.target.value)} />
                     </Field>
                     <Field label="Buyer">
-                      <TextInput value={productConfig.customerName} onChange={(event) => updateProduct("customerName", event.target.value)} />
+                      <TextInput value={activeProduct?.customerName ?? ""} onChange={(event) => updateProduct("customerName", event.target.value)} />
                     </Field>
                     <Field label="Amount">
                       <TextInput
                         min="1"
                         type="number"
-                        value={productConfig.amount}
+                        value={activeProduct?.amount ?? 1}
                         onChange={(event) => updateProduct("amount", Number(event.target.value) || 1)}
                       />
                     </Field>
                     <Field label="Product URL" className="sm:col-span-2">
-                      <TextInput value={productConfig.productUrl} onChange={(event) => updateProduct("productUrl", event.target.value)} />
+                      <TextInput value={activeProduct?.productUrl ?? ""} onChange={(event) => updateProduct("productUrl", event.target.value)} />
                     </Field>
                     <Field label="Buyer-facing offer" className="sm:col-span-2">
-                      <TextArea value={productConfig.launchNote} onChange={(event) => updateProduct("launchNote", event.target.value)} />
+                      <TextArea value={activeProduct?.launchNote ?? ""} onChange={(event) => updateProduct("launchNote", event.target.value)} />
                     </Field>
                   </div>
                 </ShellCard>
 
                 <ShellCard>
                   <Label>Commercial model</Label>
-                  <h3 className="mt-2 text-3xl font-semibold">{formatMoney(productConfig.amount, productConfig.currency)}</h3>
+                  <h3 className="mt-2 text-3xl font-semibold">{formatMoney(activeProduct?.amount ?? 0, activeProduct?.currency ?? "USDC")}</h3>
                   <p className="mt-2 text-sm leading-6 text-white/52">The current sale routes to Founder, Growth, Vendor, Agent Runtime, and Platform revenue.</p>
                   <div className="mt-5 grid grid-cols-2 gap-3">
                     {[
@@ -862,16 +992,16 @@ export default function Component() {
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                       <Label>Buyer</Label>
-                      <strong className="mt-2 block">{latestCheckout?.customer ?? productConfig.customerName}</strong>
+                      <strong className="mt-2 block">{latestCheckout?.customer ?? activeProduct?.customerName}</strong>
                     </div>
                     <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                       <Label>Product</Label>
-                      <strong className="mt-2 block">{latestCheckout?.productName ?? productConfig.productName}</strong>
+                      <strong className="mt-2 block">{latestCheckout?.productName ?? activeProduct?.productName}</strong>
                     </div>
                     <div className="rounded-lg border border-white/10 bg-black/25 p-4">
                       <Label>Amount</Label>
                       <strong className="mt-2 block">
-                        {latestCheckout ? formatMoney(latestCheckout.amount.amount, latestCheckout.amount.currency) : formatMoney(productConfig.amount, productConfig.currency)}
+                        {latestCheckout ? formatMoney(latestCheckout.amount.amount, latestCheckout.amount.currency) : formatMoney(activeProduct?.amount ?? 0, activeProduct?.currency ?? "USDC")}
                       </strong>
                     </div>
                   </div>
@@ -931,7 +1061,7 @@ export default function Component() {
                             {titleCase(recipient.role)} / {titleCase(recipient.region)} / {recipient.splitBps / 100}%
                           </span>
                         </span>
-                        <strong className="sm:text-right">{formatMoney(recipient.amount, productConfig.currency)}</strong>
+                        <strong className="sm:text-right">{formatMoney(recipient.amount, activeProduct?.currency ?? "USDC")}</strong>
                       </div>
                     ))}
                   </div>

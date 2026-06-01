@@ -4,6 +4,7 @@ export function settlementFromDodoEvent(event: DodoPaymentEvent): SettlementEntr
   return {
     id: `set_${event.id}`,
     sourceEventId: event.id,
+    productId: event.productId,
     source: "dodo",
     label: event.productName,
     payer: event.customer,
@@ -17,6 +18,7 @@ export function settlementFromX402Event(event: X402Event): SettlementEntry {
   return {
     id: `set_${event.id}`,
     sourceEventId: event.id,
+    productId: event.productId,
     source: "x402",
     label: event.resource,
     payer: event.buyer,
@@ -35,4 +37,10 @@ export function formatMoney(amount: number, currency = "USDC") {
 
 export function totalSettlement(entries: SettlementEntry[]) {
   return entries.reduce((sum, entry) => sum + entry.amount.amount, 0);
+}
+
+export function totalSettlementByProduct(entries: SettlementEntry[], productId: string) {
+  return entries
+    .filter((entry) => entry.productId === productId)
+    .reduce((sum, entry) => sum + entry.amount.amount, 0);
 }
